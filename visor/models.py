@@ -7,7 +7,7 @@ from django.contrib.gis.geos import GEOSGeometry
 # Create your models here.
 class WmsLayer(models.Model):
     name = models.CharField(max_length=50)
-    base_url = models.CharField(max_length=255)
+    base_url = models.URLField(max_length=255)
     label = models.CharField(max_length=255)
     minx = models.FloatField()
     maxx = models.FloatField()
@@ -26,6 +26,6 @@ class WmsLayer(models.Model):
 '''
     def save(self, *args, **kwargs):
         if not self.boundary_geo:
-            self.boundary_geo = self.get_point()
-        super(Report, self).save(*args, **kwargs)
+            self.boundary_geo = self.generate_boundary_from_coords()
+        super(WmsLayer, self).save(*args, **kwargs)
 '''
