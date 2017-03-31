@@ -1,0 +1,11 @@
+museuzoo/settings_local.py
+museuzoo/settings_local*
+museuzoo/settings/local.pyc
+bower_components/
+static/
+*pyc
+*.egg-info
+.idea/*
+*.sublime-project
+*.sublime-workspace
+*.sublime*
