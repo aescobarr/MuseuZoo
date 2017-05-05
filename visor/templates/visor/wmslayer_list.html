@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}Layer list{% endblock %}
+
+{% block extra_css %}
+    <link href="//cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <table id="example"></table>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+    <script>
+        var wmslayer_list_url = '/api/wmslayers/';
+    </script>
+    <script src="{% static 'visor/javascript/wmslayer_list.js'%}"></script>
+{% endblock %}

@@ -2,7 +2,12 @@ appdirs==1.4.3
 Django==1.10.6
 django-bower==5.2.0
 djangorestframework==3.6.2
+OWSLib==0.14.0
 packaging==16.8
 psycopg2==2.7.1
 pyparsing==2.2.0
+pyproj==1.9.5.1
+python-dateutil==2.6.0
+pytz==2017.2
+requests==2.13.0
 six==1.10.0

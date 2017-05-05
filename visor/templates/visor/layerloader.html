@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}WMS Layer Loader{% endblock %}
+
+{% block extra_css %}
+    <style>
+        #wms_server_url {
+            width: 100%;
+        }
+        #load_wms_list {
+            width: 100%;
+        }
+    </style>
+    <link href="//cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+        <h3>Enter wms server base URL</h3>
+    </div>
+    <div class="row">
+        <div class="col-md-11"><input id="wms_server_url" type="text"></div>
+        <div class="col-md-1"><button id="load_wms_list"><span class="glyphicon glyphicon-globe" aria-hidden="true"></span></button></div>
+    </div>
+    <div id="available_layers_container" class="row">
+        <h3>Available layers</h3>
+        <!--<ul id="available_layers"></ul>-->
+        <table id="layerlist"></table>
+    </div>
+<div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+    <script>
+        var layerload_url = '{% url 'layerloader_json' %}';
+    </script>
+    <script src="{% static 'visor/javascript/layerloader.js' %}"></script>
+{% endblock %}

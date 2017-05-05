@@ -23,9 +23,8 @@ class WmsLayer(models.Model):
         p = GEOSGeometry(wkt_polygon.format(self.minx, self.miny, self.maxx, self.miny, self.maxx, self.maxy, self.minx, self.maxy, self.minx, self.miny), srid=4326)
         return p
 
-'''
+
     def save(self, *args, **kwargs):
         if not self.boundary_geo:
             self.boundary_geo = self.generate_boundary_from_coords()
         super(WmsLayer, self).save(*args, **kwargs)
-'''

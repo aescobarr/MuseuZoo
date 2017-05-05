@@ -135,6 +135,7 @@ BOWER_INSTALLED_APPS = (
     'underscore#1.8.3',
     'bootstrap',
     'leaflet',
+    'sidebar-v2',
 )
 
 from settings_local import *
