@@ -12,7 +12,8 @@
             width: 100%;
         }
     </style>
-    <link href="//cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css" rel="stylesheet">
+    <link href="{% static 'datatables.net-dt/css/jquery.dataTables.min.css' %}" rel="stylesheet">
+    <link href="{% static 'datatables.net-buttons-dt/css/buttons.dataTables.min.css' %}" rel="stylesheet">
 {% endblock %}
 
 {% block body %}
@@ -33,7 +34,9 @@
 {% endblock %}
 
 {% block extra_js %}
-    <script src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+    <script src="{% static 'datatables.net/js/jquery.dataTables.min.js' %}"></script>
+    <script src="{% static 'datatables.net-buttons/js/dataTables.buttons.min.js' %}"></script>
+    <script src="{% static 'datatables.net-buttons/js/buttons.html5.min.js' %}"></script>
     <script>
         var layerload_url = '{% url 'layerloader_json' %}';
     </script>

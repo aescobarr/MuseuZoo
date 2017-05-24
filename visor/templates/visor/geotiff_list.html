@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}Layer list{% endblock %}
+
+{% block extra_css %}
+    <link href="//cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css" rel="stylesheet">
+    <link href="{% static 'jquery-ui/themes/base/jquery-ui.min.css' %}" rel="stylesheet">
+    <link href="{% static 'datatables.net-responsive-dt/css/responsive.dataTables.min.css' %}" rel="stylesheet">
+    <style>
+        .add_button {
+            padding: 15px;
+        }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <a role="button" class="btn btn-success" href="{% url 'geotiff_create' %}">Add geotiff</a>
+</div>
+<div class="container">
+    <table id="geotiff_list"></table>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'jquery-ui/jquery-ui.min.js' %}"></script>
+    <script src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+    <script src="{% static 'datatables.net-responsive/js/dataTables.responsive.min.js' %}"></script>
+    <script>
+        var geotiff_list_url = '/api/geotiffs/';
+    </script>
+    <script src="{% static 'visor/javascript/geotiff_list.js'%}"></script>
+{% endblock %}

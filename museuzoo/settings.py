@@ -15,7 +15,6 @@ import os
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.10/howto/deployment/checklist/
 
@@ -42,6 +41,8 @@ INSTALLED_APPS = [
     'djangobower',
     'museuzoo',
     'visor',
+    'fine_uploader',
+    'tagging',
 ]
 
 MIDDLEWARE = [
@@ -131,11 +132,22 @@ STATICFILES_FINDERS = [
 ]
 
 BOWER_INSTALLED_APPS = (
-    'jquery#3.2.1',
-    'underscore#1.8.3',
+    'jquery',
+    'jquery-ui',
+    'underscore',
     'bootstrap',
     'leaflet',
     'sidebar-v2',
+    'datatables.net',
+    'datatables.net-dt',
+    'datatables.net-buttons',
+    'datatables.net-buttons-dt',
+    'datatables.net-responsive',
+    'datatables.net-responsive-dt',
+    'fine-uploader',
+    'jquery-tagit',
 )
+
+FORCE_LOWERCASE_TAGS = True
 
 from settings_local import *

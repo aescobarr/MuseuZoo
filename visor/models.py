@@ -3,6 +3,9 @@ from __future__ import unicode_literals
 from django.db import models
 from django.contrib.gis.db import models
 from django.contrib.gis.geos import GEOSGeometry
+from tagging.fields import TagField
+import museuzoo.settings
+
 
 # Create your models here.
 class WmsLayer(models.Model):
@@ -28,3 +31,9 @@ class WmsLayer(models.Model):
         if not self.boundary_geo:
             self.boundary_geo = self.generate_boundary_from_coords()
         super(WmsLayer, self).save(*args, **kwargs)
+
+class GeoServerRaster(models.Model):
+    name = models.CharField(max_length=50)
+    file = models.FileField(upload_to=museuzoo.settings.LOCAL_RASTER_ROOT_DIRECTORY)
+    date_uploaded = models.DateTimeField(auto_now_add=True, blank=True)
+    tags = TagField()
