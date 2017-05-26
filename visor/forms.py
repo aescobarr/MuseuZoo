@@ -27,6 +27,12 @@ class GeoServerRasterForm(ModelForm):
         process_file_geoserver(cleaned_data.get("file"))
         return cleaned_data
 
+class DataFileUpdateForm(ModelForm):
+    class Meta:
+        model = GeoServerRaster
+        fields = ['name', 'tags']
+        widgets = {'name': forms.TextInput, 'tags': forms.HiddenInput}
+
 
 class DataFileForm(ModelForm):
     file_type = forms.ChoiceField(required=True, widget=forms.Select, choices=FILE_TYPES)

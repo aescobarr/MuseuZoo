@@ -5,7 +5,7 @@
 
 {% block extrahead %}
 <script>
-    var _datafile_update_url = "";
+    var _datafile_update_url = "{% url 'datafile_update_no_id' %}";
     var _datafile_delete_url = "{% url 'datafiles-list' %}";
     var _datafile_list_url = "{% url 'datafiles-list' %}";
 </script>

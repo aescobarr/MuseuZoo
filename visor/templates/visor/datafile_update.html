@@ -1,18 +1,18 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 
-{% block title %}Update GeoTiff Layer in GeoServer{% endblock %}
+{% block title %}Update DataFile{% endblock %}
 
 {% block extra_css %}
     <style>
-        .geotiff_table {
+        .datafile_table {
             width:100%;
         }
         td, th {
             padding: 20px;
             padding-left: 20px;
         }
-        .geotiff_table tbody tr td input{
+        .datafile_table tbody tr td input{
             width:100%;
         }
         .ui-helper-hidden-accessible { display:none; }
@@ -23,11 +23,11 @@
 
 {% block body %}
     <div class="container">
-        <form action="{% url 'geotiff_update' raster_id %}" method="post">
+        <form action="{% url 'datafile_update' raster_id %}" method="post">
             {% csrf_token %}
             <input role="button" class="btn btn-success" type="submit" value="Desar" />
-            <a role="button" class="btn btn-success" href="{% url 'geotiff_list' %}">Cancel·lar</a>
-            <table class="geotiff_table">
+            <a role="button" class="btn btn-success" href="{% url 'datafile_list' %}">Cancel·lar</a>
+            <table class="datafile_table">
                 {{ form.as_table }}
                 <tr>
                     <th>Tags:</th>

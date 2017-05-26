@@ -15,7 +15,7 @@ from tagging.models import Tag
 from django.core.exceptions import ValidationError
 from django.http import Http404
 import os
-from visor.forms import GeoServerRasterForm, GeoServerRasterUpdateForm, DataFileForm
+from visor.forms import GeoServerRasterForm, GeoServerRasterUpdateForm, DataFileForm, DataFileUpdateForm
 import museuzoo.settings
 from visor.helpers import delete_geoserver_store
 from django import forms
@@ -23,6 +23,7 @@ from django import forms
 
 def datafile_list(request):
     return render(request, 'visor/datafile_list.html')
+
 
 def datafile_create(request):
     if request.method == 'POST':
@@ -33,6 +34,19 @@ def datafile_create(request):
     else:
         form = DataFileForm()
     return render(request, 'visor/datafile_create.html', {'form' : form})
+
+
+def datafile_update(request, id=None):
+    if id:
+        datafile = get_object_or_404(DataFile,pk=id)
+    else:
+        raise forms.ValidationError("No existeix aquest fitxer")
+    form = DataFileUpdateForm(request.POST or None, instance=datafile)
+    if request.POST and form.is_valid():
+        form.save()
+        return HttpResponseRedirect(reverse('datafile_list'))
+    return render(request, 'visor/datafile_update.html', {'form': form, 'raster_id' : id})
+
 
 def geotiff_update(request, id=None):
     if id:
