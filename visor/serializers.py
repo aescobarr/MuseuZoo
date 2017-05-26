@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from models import WmsLayer, GeoServerRaster
+from models import WmsLayer, GeoServerRaster, DataFile
 from tagging.models import Tag
 
 
@@ -9,6 +9,11 @@ class WmsLayerSerializer(serializers.ModelSerializer):
         model = WmsLayer
         fields = ('id', 'name', 'base_url', 'label', 'minx', 'maxx', 'miny', 'maxy')
 
+
+class DataFileSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DataFile
+        fields = ('id', 'name', 'file', 'date_uploaded', 'file_type', 'tags')
 
 class GeoTiffSerializer(serializers.ModelSerializer):
     class Meta:

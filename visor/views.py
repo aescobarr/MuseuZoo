@@ -1,13 +1,13 @@
 from rest_framework import status,viewsets
 from rest_framework.decorators import api_view
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.views.generic import UpdateView, ListView
 from django.http import HttpResponse, HttpRequest, HttpResponseRedirect
 from django.template.loader import render_to_string
-from visor.models import WmsLayer,GeoServerRaster
+from visor.models import WmsLayer,GeoServerRaster, DataFile
 from rest_framework.exceptions import ParseError
 from rest_framework.response import Response
-from serializers import WmsLayerSerializer, GeoTiffSerializer, TagSerializer
+from serializers import WmsLayerSerializer, GeoTiffSerializer, TagSerializer, DataFileSerializer
 from owslib.wms import WebMapService
 from django.middleware.csrf import get_token
 from django.core.urlresolvers import reverse
@@ -15,9 +15,35 @@ from tagging.models import Tag
 from django.core.exceptions import ValidationError
 from django.http import Http404
 import os
-from visor.forms import GeoServerRasterForm
+from visor.forms import GeoServerRasterForm, GeoServerRasterUpdateForm, DataFileForm
 import museuzoo.settings
 from visor.helpers import delete_geoserver_store
+from django import forms
+
+
+def datafile_list(request):
+    return render(request, 'visor/datafile_list.html')
+
+def datafile_create(request):
+    if request.method == 'POST':
+        form = DataFileForm(request.POST,request.FILES)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('datafile_list'))
+    else:
+        form = DataFileForm()
+    return render(request, 'visor/datafile_create.html', {'form' : form})
+
+def geotiff_update(request, id=None):
+    if id:
+        raster = get_object_or_404(GeoServerRaster,pk=id)
+    else:
+        raise forms.ValidationError("No existeix aquest raster")
+    form = GeoServerRasterUpdateForm(request.POST or None, instance=raster)
+    if request.POST and form.is_valid():
+        form.save()
+        return HttpResponseRedirect(reverse('geotiff_list'))
+    return render(request, 'visor/geotiff_update.html', {'form': form, 'raster_id' : id})
 
 
 def geotiff_create(request):
@@ -28,7 +54,7 @@ def geotiff_create(request):
             return HttpResponseRedirect(reverse('geotiff_list'))
     else:
         form = GeoServerRasterForm()
-    return render(request, 'visor/geotiff_add.html', {'form' : form})
+    return render(request, 'visor/geotiff_create.html', {'form' : form})
 
 
 # Create your views here.
@@ -99,6 +125,25 @@ class WmsLayerViewSet(viewsets.ModelViewSet):
     queryset = WmsLayer.objects.all()
     serializer_class = WmsLayerSerializer
 
+
+class DataFileViewSet(viewsets.ModelViewSet):
+    serializer_class = DataFileSerializer
+
+    def get_queryset(self):
+        queryset = DataFile.objects.all()
+        return queryset
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+            filename = instance.file.name
+            self.perform_destroy(instance)
+            # delete local file
+            file = os.path.join(museuzoo.settings.MEDIA_ROOT, filename)
+            os.remove(file)
+        except Http404:
+            pass
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 class GeotiffViewSet(viewsets.ModelViewSet):
     serializer_class = GeoTiffSerializer

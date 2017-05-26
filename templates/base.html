@@ -33,6 +33,11 @@
     <![endif]-->
     {% endblock %}
 
+    <!--This is for initializing javascript variables from django template-->
+    {% block extrahead %}
+
+    {% endblock %}
+
 </head>
 
 <body>
@@ -57,6 +62,9 @@
                 <ul class="nav navbar-nav navbar-right">
                     <li>
                         <a href="{% url 'geotiff_list' %}">List geotiffs</a>
+                    </li>
+                    <li>
+                        <a href="{% url 'datafile_list' %}">List datafiles</a>
                     </li>
                     <li>
                         <a href="#">Logout</a>

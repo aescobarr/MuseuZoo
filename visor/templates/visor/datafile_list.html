@@ -1,13 +1,13 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 
-{% block title %}Layer list{% endblock %}
+{% block title %}Datafile (shapefile,csv) list{% endblock %}
 
 {% block extrahead %}
 <script>
-    var _geotiff_update_url = "{% url 'geotiff_update_no_id' %}";
-    var _geotiff_delete_url = "{% url 'geotiffs-list' %}";
-    var _geotiff_list_url = "{% url 'geotiffs-list' %}";
+    var _datafile_update_url = "";
+    var _datafile_delete_url = "{% url 'datafiles-list' %}";
+    var _datafile_list_url = "{% url 'datafiles-list' %}";
 </script>
 {% endblock %}
 
@@ -24,10 +24,10 @@
 
 {% block body %}
 <div class="container">
-    <a role="button" class="btn btn-success" href="{% url 'geotiff_create' %}">Add geotiff</a>
+    <a role="button" class="btn btn-success" href="{% url 'datafile_create' %}">Add DataFile</a>
 </div>
 <div class="container">
-    <table id="geotiff_list"></table>
+    <table id="datafile_list"></table>
 </div>
 {% endblock %}
 
@@ -35,5 +35,5 @@
     <script src="{% static 'jquery-ui/jquery-ui.min.js' %}"></script>
     <script src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
     <script src="{% static 'datatables.net-responsive/js/dataTables.responsive.min.js' %}"></script>
-    <script src="{% static 'visor/javascript/geotiff_list.js'%}"></script>
+    <script src="{% static 'visor/javascript/datafile_list.js'%}"></script>
 {% endblock %}

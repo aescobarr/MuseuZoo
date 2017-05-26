@@ -5,20 +5,24 @@ from visor import views
 from rest_framework import routers
 from fine_uploader.views import UploadView
 from fine_uploader.views import home
-from visor.views import geotiff_create, geotiff_list
+from visor.views import geotiff_create, geotiff_list, geotiff_update, datafile_list, datafile_create
 
 
 router = routers.DefaultRouter()
 router.register(r'geotiffs', views.GeotiffViewSet, base_name='geotiffs')
+router.register(r'datafiles', views.DataFileViewSet, base_name='datafiles')
 router.register(r'tags', views.TagViewSet, 'tags')
 
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', views.index, name='index'),
-    url(r'^geotiff/add$', home, name='home'),
+    url(r'^datafile/list$', datafile_list, name='datafile_list'),
+    url(r'^datafile/create$', datafile_create, name='datafile_create'),
     url(r'^geotiff/list$', geotiff_list, name='geotiff_list'),
     url(r'^geotiff/create$', geotiff_create, name='geotiff_create'),
+    url(r'^geotiff/update/$', geotiff_update, name='geotiff_update_no_id'),
+    url(r'^geotiff/update/(?P<id>\d+)/$', geotiff_update, name='geotiff_update'),
     url(r'^layer_list$', views.WmsLayerListView.as_view(), name='layer_list'),
     url(r'^upload(?:/(?P<qquuid>\S+))?', UploadView.as_view(), name='upload'),
     url(r'^upload_list$', UploadView.as_view(), name='upload'),

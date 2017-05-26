@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}Update GeoTiff Layer in GeoServer{% endblock %}
+
+{% block extra_css %}
+    <style>
+        .geotiff_table {
+            width:100%;
+        }
+        td, th {
+            padding: 20px;
+            padding-left: 20px;
+        }
+        .geotiff_table tbody tr td input{
+            width:100%;
+        }
+        .ui-helper-hidden-accessible { display:none; }
+    </style>
+    <link href="{% static 'jquery-tagit/css/jquery.tagit.css' %}" rel="stylesheet">
+    <link href="{% static 'jquery-tagit/css/tagit.ui-zendesk.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <form action="{% url 'geotiff_update' raster_id %}" method="post">
+            {% csrf_token %}
+            <input role="button" class="btn btn-success" type="submit" value="Desar" />
+            <a role="button" class="btn btn-success" href="{% url 'geotiff_list' %}">Cancel·lar</a>
+            <table class="geotiff_table">
+                {{ form.as_table }}
+                <tr>
+                    <th>Tags:</th>
+                    <td><ul id="tags_list"></ul></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'jquery-ui/jquery-ui.min.js' %}"></script>
+    <script>
+        /* Fix for tagit/jquery conflict */
+        $.fn.andSelf = function() {
+            return this.addBack.apply(this, arguments);
+        }
+    </script>
+    <script src="{% static 'jquery-tagit/js/tag-it.min.js' %}"></script>
+    <script src="{% static 'visor/javascript/geotiff_add.js' %}"></script>
+    <script src="{% static 'visor/javascript/geotiff_update.js' %}"></script>
+{% endblock %}
