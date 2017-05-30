@@ -46,6 +46,7 @@ class GeoServerRaster(models.Model):
     name = models.CharField(max_length=50)
     file = models.FileField(upload_to=conf.LOCAL_RASTER_ROOT_DIRECTORY, validators=[validate_tif_extension])
     date_uploaded = models.DateTimeField(auto_now_add=True, blank=True)
+    date_modified = models.DateTimeField(auto_now=True)
     tags = TagField()
 
 
@@ -61,4 +62,5 @@ class DataFile(models.Model):
     file = models.FileField(upload_to=conf.LOCAL_DATAFILE_ROOT_DIRECTORY, validators=[validate_datafile_extension])
     date_uploaded = models.DateTimeField(auto_now_add=True, blank=True)
     file_type = models.CharField(max_length=5, choices=FILE_TYPES)
+    date_modified = models.DateTimeField(auto_now=True)
     tags = TagField()

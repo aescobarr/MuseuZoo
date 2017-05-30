@@ -6,8 +6,8 @@ from django import forms
 import sys
 
 
-def check_file_already_uploaded(file):
-    if os.path.isfile(conf.LOCAL_RASTER_ROOT + "/" + file.name ):
+def check_file_already_uploaded(file, upload_dir):
+    if os.path.isfile(upload_dir + "/" + file.name ):
         raise forms.ValidationError("Aquest fitxer ja es al disc")
 
 

@@ -146,7 +146,18 @@ BOWER_INSTALLED_APPS = (
     'datatables.net-responsive-dt',
     'fine-uploader',
     'jquery-tagit',
+    'file_resubmit',
 )
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+    },
+    'file_resubmit': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': '/tmp/file_resubmit/'
+    }
+}
 
 FORCE_LOWERCASE_TAGS = True
 

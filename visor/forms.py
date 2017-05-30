@@ -1,7 +1,9 @@
 from django.forms import ModelForm
 from visor.models import WmsLayer, GeoServerRaster, DataFile, FILE_TYPES
 from django import forms
+import museuzoo.settings as conf
 from visor.helpers import process_file_geoserver, check_file_already_uploaded
+from file_resubmit.admin import AdminResubmitFileWidget
 
 
 class WmsLayerForm(ModelForm):
@@ -23,7 +25,7 @@ class GeoServerRasterForm(ModelForm):
 
     def clean(self):
         cleaned_data = super(GeoServerRasterForm, self).clean()
-        check_file_already_uploaded(cleaned_data.get("file"))
+        check_file_already_uploaded(cleaned_data.get("file"), conf.LOCAL_RASTER_ROOT)
         process_file_geoserver(cleaned_data.get("file"))
         return cleaned_data
 
@@ -40,4 +42,9 @@ class DataFileForm(ModelForm):
     class Meta:
         model = DataFile
         fields = ['name', 'file', 'file_type', 'tags']
-        widgets = {'name': forms.TextInput, 'file': forms.FileInput, 'tags': forms.HiddenInput}
+        widgets = {'name': forms.TextInput, 'file': AdminResubmitFileWidget, 'tags': forms.HiddenInput}
+
+    def clean(self):
+        cleaned_data = super(DataFileForm, self).clean()
+        check_file_already_uploaded(cleaned_data.get("file"), conf.LOCAL_DATAFILE_ROOT)
+        return cleaned_data

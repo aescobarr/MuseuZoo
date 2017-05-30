@@ -28,6 +28,14 @@
             <input role="button" class="btn btn-success" type="submit" value="Desar" />
             <a role="button" class="btn btn-success" href="{% url 'geotiff_list' %}">Cancel·lar</a>
             <table class="geotiff_table">
+                <tr>
+                    <th>File url:</th>
+                    <td>{{ form.instance.file }}</td>
+                </tr>
+                <tr>
+                    <th>Date uploaded:</th>
+                    <td>{{ form.instance.date_uploaded | date:"d/m/Y - h:i:s" }}</td>
+                </tr>
                 {{ form.as_table }}
                 <tr>
                     <th>Tags:</th>

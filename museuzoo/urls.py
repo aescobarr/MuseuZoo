@@ -6,6 +6,7 @@ from rest_framework import routers
 from fine_uploader.views import UploadView
 from fine_uploader.views import home
 from visor.views import geotiff_create, geotiff_list, geotiff_update, datafile_list, datafile_create, datafile_update
+from django.conf.urls.static import static
 
 
 router = routers.DefaultRouter()
@@ -33,4 +34,4 @@ urlpatterns = [
     #url(r'^layerloader_json/$', views.layerloader_api, name='layerloader_json'),
     url(r'^api/',include(router.urls)),
     url(r'^api-auth/',include('rest_framework.urls', namespace='rest_framework')),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
