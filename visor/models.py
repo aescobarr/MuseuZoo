@@ -49,6 +49,7 @@ class GeoServerRaster(models.Model):
     date_uploaded = models.DateTimeField(auto_now_add=True, blank=True)
     date_modified = models.DateTimeField(auto_now=True)
     uploaded_by = models.ForeignKey(User, related_name="rasters")
+    srs_code = models.CharField(max_length=10, blank=True)
     tags = TagField()
 
 
