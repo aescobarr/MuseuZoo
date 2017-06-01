@@ -33,8 +33,16 @@
                     <td>{{ form.instance.file }}</td>
                 </tr>
                 <tr>
+                    <th>Uploaded by:</th>
+                    <td>{{ form.instance.uploaded_by }}</td>
+                </tr>
+                <tr>
                     <th>Date uploaded:</th>
                     <td>{{ form.instance.date_uploaded | date:"d/m/Y - h:i:s" }}</td>
+                </tr>
+                <tr>
+                    <th>Date modified:</th>
+                    <td>{{ form.instance.date_modified | date:"d/m/Y - h:i:s" }}</td>
                 </tr>
                 <tr>
                     <th>File type:</th>

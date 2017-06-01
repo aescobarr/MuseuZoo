@@ -11,11 +11,13 @@ class WmsLayerSerializer(serializers.ModelSerializer):
 
 
 class DataFileSerializer(serializers.ModelSerializer):
+    uploaded_by = serializers.StringRelatedField(many=False)
     class Meta:
         model = DataFile
         fields = ('id', 'name', 'file', 'date_uploaded', 'date_modified', 'uploaded_by', 'file_type', 'tags')
 
 class GeoTiffSerializer(serializers.ModelSerializer):
+    uploaded_by = serializers.StringRelatedField(many=False)
     class Meta:
         model = GeoServerRaster
         fields = ('id', 'name', 'file', 'date_uploaded', 'date_modified', 'uploaded_by', 'tags')
