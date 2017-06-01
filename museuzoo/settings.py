@@ -159,6 +159,8 @@ CACHES = {
     }
 }
 
+LOGIN_REDIRECT_URL = '/'
+
 FORCE_LOWERCASE_TAGS = True
 
 from settings_local import *

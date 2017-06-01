@@ -13,12 +13,12 @@ class WmsLayerSerializer(serializers.ModelSerializer):
 class DataFileSerializer(serializers.ModelSerializer):
     class Meta:
         model = DataFile
-        fields = ('id', 'name', 'file', 'date_uploaded', 'date_modified', 'file_type', 'tags')
+        fields = ('id', 'name', 'file', 'date_uploaded', 'date_modified', 'uploaded_by', 'file_type', 'tags')
 
 class GeoTiffSerializer(serializers.ModelSerializer):
     class Meta:
         model = GeoServerRaster
-        fields = ('id', 'name', 'file', 'date_uploaded', 'date_modified', 'tags')
+        fields = ('id', 'name', 'file', 'date_uploaded', 'date_modified', 'uploaded_by', 'tags')
 
 
 class TagSerializer(serializers.ModelSerializer):

@@ -5,6 +5,7 @@ from django.contrib.gis.db import models
 from django.contrib.gis.geos import GEOSGeometry
 from tagging.fields import TagField
 from django.forms import ValidationError
+from django.contrib.auth.models import User
 import museuzoo.settings as conf
 import os
 
@@ -47,6 +48,7 @@ class GeoServerRaster(models.Model):
     file = models.FileField(upload_to=conf.LOCAL_RASTER_ROOT_DIRECTORY, validators=[validate_tif_extension])
     date_uploaded = models.DateTimeField(auto_now_add=True, blank=True)
     date_modified = models.DateTimeField(auto_now=True)
+    uploaded_by = models.ForeignKey(User, related_name="rasters")
     tags = TagField()
 
 
@@ -63,4 +65,5 @@ class DataFile(models.Model):
     date_uploaded = models.DateTimeField(auto_now_add=True, blank=True)
     file_type = models.CharField(max_length=5, choices=FILE_TYPES)
     date_modified = models.DateTimeField(auto_now=True)
+    uploaded_by = models.ForeignKey(User, related_name="data_files")
     tags = TagField()

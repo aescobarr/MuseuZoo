@@ -2,7 +2,7 @@ from rest_framework import status,viewsets
 from rest_framework.decorators import api_view
 from django.shortcuts import render, get_object_or_404
 from django.views.generic import UpdateView, ListView
-from django.http import HttpResponse, HttpRequest, HttpResponseRedirect
+from django.http import HttpResponse, HttpResponseRedirect
 from django.template.loader import render_to_string
 from visor.models import WmsLayer,GeoServerRaster, DataFile
 from rest_framework.exceptions import ParseError
@@ -12,30 +12,36 @@ from owslib.wms import WebMapService
 from django.middleware.csrf import get_token
 from django.core.urlresolvers import reverse
 from tagging.models import Tag
-from django.core.exceptions import ValidationError
 from django.http import Http404
 import os
 from visor.forms import GeoServerRasterForm, GeoServerRasterUpdateForm, DataFileForm, DataFileUpdateForm
 import museuzoo.settings
 from visor.helpers import delete_geoserver_store
 from django import forms
+from django.contrib.auth.decorators import login_required
 
 
+@login_required
 def datafile_list(request):
     return render(request, 'visor/datafile_list.html')
 
 
+@login_required
 def datafile_create(request):
+    this_user = request.user
     if request.method == 'POST':
-        form = DataFileForm(request.POST,request.FILES)
+        form = DataFileForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            datafile = form.save(commit=False)
+            datafile.uploaded_by = this_user
+            datafile.save()
             return HttpResponseRedirect(reverse('datafile_list'))
     else:
         form = DataFileForm()
     return render(request, 'visor/datafile_create.html', {'form' : form})
 
 
+@login_required
 def datafile_update(request, id=None):
     if id:
         datafile = get_object_or_404(DataFile,pk=id)
@@ -48,6 +54,7 @@ def datafile_update(request, id=None):
     return render(request, 'visor/datafile_update.html', {'form': form, 'raster_id' : id})
 
 
+@login_required
 def geotiff_update(request, id=None):
     if id:
         raster = get_object_or_404(GeoServerRaster,pk=id)
@@ -60,11 +67,15 @@ def geotiff_update(request, id=None):
     return render(request, 'visor/geotiff_update.html', {'form': form, 'raster_id' : id})
 
 
+@login_required
 def geotiff_create(request):
+    this_user = request.user
     if request.method == 'POST':
         form = GeoServerRasterForm(request.POST,request.FILES)
         if form.is_valid():
-            form.save()
+            geotiff = form.save(commit=False)
+            geotiff.uploaded_by = this_user
+            geotiff.save()
             return HttpResponseRedirect(reverse('geotiff_list'))
     else:
         form = GeoServerRasterForm()
@@ -78,20 +89,23 @@ def index(request):
     return render(request, 'visor/index.html', context)
 
 
+@login_required
 def geotiff_list(request):
     return render(request, 'visor/geotiff_list.html')
 
 
+@login_required
 def layerloader(request):
     return render(request, 'visor/layerloader.html')
 
 
+@login_required
 def add_geotiff(request):
     csrf_token = get_token(request)
-    # return render_to_response(request, 'visor/import.html', {'csrf_token': csrf_token})
     return render(request, 'visor/import.html', {'csrf_token': csrf_token})
 
 
+@login_required
 @api_view(['GET'])
 def layerloader_api(request):
     if request.method == 'GET':

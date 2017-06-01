@@ -7,6 +7,7 @@ from fine_uploader.views import UploadView
 from fine_uploader.views import home
 from visor.views import geotiff_create, geotiff_list, geotiff_update, datafile_list, datafile_create, datafile_update
 from django.conf.urls.static import static
+from django.contrib.auth.views import login,logout
 
 
 router = routers.DefaultRouter()
@@ -18,6 +19,8 @@ router.register(r'tags', views.TagViewSet, 'tags')
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^$', views.index, name='index'),
+    url(r'^accounts/login/$', login, name='login'),
+    url(r'^logout/$', logout, {'next_page': '/'}, name='logout'),
     url(r'^datafile/list$', datafile_list, name='datafile_list'),
     url(r'^datafile/create$', datafile_create, name='datafile_create'),
     url(r'^datafile/update/$', datafile_update, name='datafile_update_no_id'),
