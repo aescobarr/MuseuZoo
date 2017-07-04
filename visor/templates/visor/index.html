@@ -61,10 +61,15 @@
         </div>
     </div>
     <div>
-        <div style="float:left;">
+        <div>
             <h2>Raster List</h2>
+            <ul>
+                {% for raster in raster_list %}
+                    <li>{{ raster.full_geoserver_layer_name }}<input type="checkbox" name="{{ raster.full_geoserver_layer_name }}" value="{{ raster.full_geoserver_layer_name }}"><br></li>
+                {% endfor %}
+            </ul>
         </div>
-        <div style="float:left;">
+        <div>
             <h2>Datafile List</h2>
         </div>
     </div>
