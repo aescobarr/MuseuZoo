@@ -13,17 +13,17 @@
 {% endblock %}
 
 {% block body %}
-    <div class="container">
-        <section>
-            <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            </div><!-- /.modal -->
-        </section>
-        <div class="row">
-            <div class="col-lg-12">
-                <div id="map"></div>
-            </div>
+<div class="container">
+    <section>
+        <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        </div><!-- /.modal -->
+    </section>
+    <div class="row">
+        <div class="col-lg-12">
+            <div id="map"></div>
         </div>
-        <div id="sidebar" class="sidebar collapsed">
+    </div>
+    <div id="sidebar" class="sidebar collapsed">
         <!-- Nav tabs -->
         <div class="sidebar-tabs">
             <ul role="tablist">
@@ -60,11 +60,27 @@
             </div>
         </div>
     </div>
+    <div>
+        <div style="float:left;">
+            <h2>Raster List</h2>
+        </div>
+        <div style="float:left;">
+            <h2>Datafile List</h2>
+        </div>
+    </div>
+</div>
 {% endblock %}
 
 {% block extra_js %}
     <script src="{% static 'leaflet/dist/leaflet.js' %}" ></script>
     <script src="{% static 'underscore/underscore-min.js' %}" ></script>
+    <script>
+        var rasters = [];
+        var wms_url = '{{ wms_url }}';
+        {% for raster in raster_list %}
+            rasters.push('{{ raster.full_geoserver_layer_name }}');
+        {% endfor %}
+    </script>
     <script src="{% static 'visor/javascript/visor.js' %}" ></script>
     <script src="{% static 'sidebar-v2/js/jquery-sidebar.min.js' %}" ></script>
 {% endblock %}

@@ -53,13 +53,16 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="#">
+                <!--<a class="navbar-brand" href="#">
                     <img src="http://placehold.it/150x50&text=Logo" alt="">
-                </a>
+                </a>-->
             </div>
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
+                    <li>
+                        <a href="{% url 'index' %}">Map</a>
+                    </li>
                     <li>
                         <a href="{% url 'geotiff_list' %}">List geotiffs</a>
                     </li>

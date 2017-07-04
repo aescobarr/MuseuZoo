@@ -50,7 +50,13 @@ class GeoServerRaster(models.Model):
     date_modified = models.DateTimeField(auto_now=True)
     uploaded_by = models.ForeignKey(User, related_name="rasters")
     srs_code = models.CharField(max_length=10, blank=True)
+    geoserver_workspace = models.CharField(max_length=50, blank=True, null=True)
+    geoserver_layername = models.CharField(max_length=50, blank=True, null=True)
     tags = TagField()
+
+    @property
+    def full_geoserver_layer_name(self):
+        return self.geoserver_workspace + ":" + self.geoserver_layername
 
 
 def validate_datafile_extension(value):

@@ -57,6 +57,7 @@ $(document).ready(function() {
         "columns": [
             { "data": "name" }
             ,{ "data": "file" }
+            ,{ "data": "srs_code" }
             ,{ "data": "uploaded_by" }
             ,{ "data": "date_uploaded" }
             ,{ "data": "date_modified" }
@@ -81,10 +82,14 @@ $(document).ready(function() {
             },
             {
                 "targets":2,
-                "title": "Uploaded by"
+                "title": "SRS"
             },
             {
                 "targets":3,
+                "title": "Uploaded by"
+            },
+            {
+                "targets":4,
                 "title": "Date Uploaded",
                 "type": "date",
                 "render": function(value){
@@ -94,7 +99,7 @@ $(document).ready(function() {
                 }
             },
             {
-                "targets":4,
+                "targets":5,
                 "title": "Date Modified",
                 "type": "date",
                 "render": function(value){
@@ -104,7 +109,7 @@ $(document).ready(function() {
                 }
             },
             {
-                "targets":5,
+                "targets":6,
                 "title": "Tags"
             },
             {

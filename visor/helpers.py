@@ -17,7 +17,7 @@ def process_file_geoserver(file):
         with open( geoserver_filepath, 'wb+') as destination:
             for chunk in file.chunks():
                 destination.write(chunk)
-        cat = Catalog(conf.GEOSERVER_URL, conf.GEOSERVER_USER, conf.GEOSERVER_PASSWORD)
+        cat = Catalog(conf.GEOSERVER_REST_URL, conf.GEOSERVER_USER, conf.GEOSERVER_PASSWORD)
         ws = cat.get_workspace(conf.GEOSERVER_WORKSPACE)
         tiffdata = geoserver_filepath
         ft = cat.create_coveragestore(os.path.splitext(file.name)[0], tiffdata, ws)
@@ -26,7 +26,7 @@ def process_file_geoserver(file):
 
 
 def get_coverage_srs(name):
-    cat = Catalog(conf.GEOSERVER_URL, conf.GEOSERVER_USER, conf.GEOSERVER_PASSWORD)
+    cat = Catalog(conf.GEOSERVER_REST_URL, conf.GEOSERVER_USER, conf.GEOSERVER_PASSWORD)
     l = cat.get_layer(name)
     return l.resource.projection
 
@@ -35,7 +35,7 @@ def delete_geoserver_store(filename):
     name_and_extension = os.path.basename(filename)
     name = os.path.splitext(name_and_extension)[0]
     # Load catalog
-    cat = Catalog(conf.GEOSERVER_URL, conf.GEOSERVER_USER, conf.GEOSERVER_PASSWORD)
+    cat = Catalog(conf.GEOSERVER_REST_URL, conf.GEOSERVER_USER, conf.GEOSERVER_PASSWORD)
     # Load store
     st = cat.get_store(name)
     # Load layer

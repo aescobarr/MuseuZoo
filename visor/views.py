@@ -19,6 +19,8 @@ import museuzoo.settings
 from visor.helpers import delete_geoserver_store
 from django import forms
 from django.contrib.auth.decorators import login_required
+from visor.helpers import get_coverage_srs
+import museuzoo.settings as conf
 
 
 @login_required
@@ -75,6 +77,11 @@ def geotiff_create(request):
         if form.is_valid():
             geotiff = form.save(commit=False)
             geotiff.uploaded_by = this_user
+            layer_name = os.path.splitext(geotiff.file.name)[0]
+            srs = get_coverage_srs(layer_name)
+            geotiff.srs_code = srs
+            geotiff.geoserver_layername = layer_name
+            geotiff.geoserver_workspace = conf.GEOSERVER_WORKSPACE
             geotiff.save()
             return HttpResponseRedirect(reverse('geotiff_list'))
     else:
@@ -85,7 +92,9 @@ def geotiff_create(request):
 # Create your views here.
 def index(request):
     layers = WmsLayer.objects.all()
-    context = {'wmslayer_list': layers}
+    rasters = GeoServerRaster.objects.all()
+    wms_url = conf.GEOSERVER_WMS_URL
+    context = {'wmslayer_list': layers, 'raster_list': rasters, 'wms_url': wms_url}
     return render(request, 'visor/index.html', context)
 
 

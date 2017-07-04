@@ -25,6 +25,12 @@ $(document).ready(function() {
         $.ajax({
             url: _datafile_delete_url + id,
             method: "DELETE",
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type)) {
+                    var csrftoken = getCookie('csrftoken');
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
             success: function( data, textStatus, jqXHR ) {
                  alert("Deleted!");
                  table.ajax.reload();
