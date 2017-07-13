@@ -93,8 +93,9 @@ def geotiff_create(request):
 def index(request):
     layers = WmsLayer.objects.all()
     rasters = GeoServerRaster.objects.all()
+    files = DataFile.objects.all()
     wms_url = conf.GEOSERVER_WMS_URL
-    context = {'wmslayer_list': layers, 'raster_list': rasters, 'wms_url': wms_url}
+    context = {'wmslayer_list': layers, 'raster_list': rasters, 'wms_url': wms_url, 'files_list': files}
     return render(request, 'visor/index.html', context)
 
 

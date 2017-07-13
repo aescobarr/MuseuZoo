@@ -20,7 +20,7 @@ class GeoTiffSerializer(serializers.ModelSerializer):
     uploaded_by = serializers.StringRelatedField(many=False)
     class Meta:
         model = GeoServerRaster
-        fields = ('id', 'name', 'file', 'srs_code', 'date_uploaded', 'date_modified', 'uploaded_by', 'tags')
+        fields = ('id', 'name', 'file', 'srs_code', 'date_uploaded', 'date_modified', 'uploaded_by', 'tags', 'full_geoserver_layer_name')
 
 
 class TagSerializer(serializers.ModelSerializer):

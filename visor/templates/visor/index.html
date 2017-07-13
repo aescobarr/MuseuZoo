@@ -3,12 +3,24 @@
 
 {% block title %}Map{% endblock %}
 
+{% block extrahead %}
+<script>
+    var _geotiff_list_url = "{% url 'geotiffs-list' %}";
+    var _datafile_list_url = "{% url 'datafiles-list' %}";
+</script>
+{% endblock %}
+
 {% block extra_css %}
+<link href="//cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="{% static 'jquery-ui/themes/base/jquery-ui.min.css' %}" rel="stylesheet">
+<link href="{% static 'datatables.net-responsive-dt/css/responsive.dataTables.min.css' %}" rel="stylesheet">
+<link href="{% static 'datatables.net-select-dt/css/select.dataTables.min.css' %}" rel="stylesheet">
 <link href="{% static 'leaflet/dist/leaflet.css' %}" rel="stylesheet">
 <link href="{% static 'sidebar-v2/css/leaflet-sidebar.min.css' %}" rel="stylesheet">
 <style>
     #map { height: 400px; }
-
+    #geotiff_list_container { float:left; width: 50%; padding: 20px;}
+    #datafile_list_container { float:left; width: 50%; padding: 20px;}
 </style>
 {% endblock %}
 
@@ -23,6 +35,7 @@
             <div id="map"></div>
         </div>
     </div>
+
     <div id="sidebar" class="sidebar collapsed">
         <!-- Nav tabs -->
         <div class="sidebar-tabs">
@@ -62,21 +75,21 @@
     </div>
     <div>
         <div>
-            <h2>Raster List</h2>
-            <ul>
-                {% for raster in raster_list %}
-                    <li>{{ raster.full_geoserver_layer_name }}<input type="checkbox" name="{{ raster.full_geoserver_layer_name }}" value="{{ raster.full_geoserver_layer_name }}"><br></li>
-                {% endfor %}
-            </ul>
-        </div>
-        <div>
-            <h2>Datafile List</h2>
+            <div id="geotiff_list_container">
+                <table id="geotiff_list"></table>
+            </div>
+            <div id="datafile_list_container">
+                <table id="datafile_list"></table>
+            </div>
         </div>
     </div>
 </div>
 {% endblock %}
 
 {% block extra_js %}
+    <script>
+        var map;
+    </script>
     <script src="{% static 'leaflet/dist/leaflet.js' %}" ></script>
     <script src="{% static 'underscore/underscore-min.js' %}" ></script>
     <script>
@@ -88,4 +101,11 @@
     </script>
     <script src="{% static 'visor/javascript/visor.js' %}" ></script>
     <script src="{% static 'sidebar-v2/js/jquery-sidebar.min.js' %}" ></script>
+    <script src="{% static 'jquery-ui/jquery-ui.min.js' %}"></script>
+    <script src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+    <script src="{% static 'datatables.net-responsive/js/dataTables.responsive.min.js' %}"></script>
+    <script src="{% static 'datatables.net-select/js/dataTables.select.min.js' %}"></script>
+    <script src="{% static 'visor/javascript/csrf_utils.js'%}"></script>
+    <script src="{% static 'visor/javascript/geotiff_compact_list.js'%}"></script>
+    <script src="{% static 'visor/javascript/datafile_compact_list.js'%}"></script>
 {% endblock %}

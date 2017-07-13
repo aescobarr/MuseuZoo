@@ -74,3 +74,12 @@ class DataFile(models.Model):
     date_modified = models.DateTimeField(auto_now=True)
     uploaded_by = models.ForeignKey(User, related_name="data_files")
     tags = TagField()
+
+
+class Operation(models.Model):
+    raster_operator = models.ForeignKey(GeoServerRaster)
+    file_operator = models.ForeignKey(DataFile)
+    performed_on = models.DateTimeField(auto_now_add=True, blank=True)
+    performed_by = models.ForeignKey(User)
+    result = models.ForeignKey(DataFile, related_name="result",blank=True,null=True)
+    execution_log = models.TextField(blank=True,null=True)

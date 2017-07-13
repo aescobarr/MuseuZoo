@@ -1,5 +1,5 @@
 $( document ).ready(function() {
-    var map = new L.Map('map');
+    map = new L.Map('map');
 
 	// create the tile layer with correct attribution
 	var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
@@ -9,9 +9,9 @@ $( document ).ready(function() {
 	// start the map in South-East England
 	map.setView(new L.LatLng(40.58, -3.25),4);
 	map.addLayer(osm);
-	var sidebar = $('#sidebar').sidebar();
+	//var sidebar = $('#sidebar').sidebar();
 
-	for (var i = 0; i < rasters.length; i++){
+	/*for (var i = 0; i < rasters.length; i++){
 	    var wmsLayer = L.tileLayer.wms(
 	        wms_url,
 	        {
@@ -20,5 +20,5 @@ $( document ).ready(function() {
             }
         ).addTo(map);
 	    wmsLayer.setOpacity(0.4);
-	}
+	}*/
 });

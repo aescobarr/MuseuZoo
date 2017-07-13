@@ -144,6 +144,8 @@ BOWER_INSTALLED_APPS = (
     'datatables.net-buttons-dt',
     'datatables.net-responsive',
     'datatables.net-responsive-dt',
+    'datatables.net-select',
+    'datatables.net-select-dt',
     'fine-uploader',
     'jquery-tagit',
     'file_resubmit',
