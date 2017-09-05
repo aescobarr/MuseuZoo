@@ -59,13 +59,13 @@ $(document).ready(function() {
     } );
 
     table.on( 'deselect', function ( e, dt, type, indexes ) {
-    if ( type === 'rows' ) {
         map.eachLayer(
             function(layer){
-                map.removeLayer(layer);
+                if(layer != osm){
+                    map.removeLayer(layer);
+                }
             }
         );
-    }
-} );
+    });
 
 } );

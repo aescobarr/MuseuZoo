@@ -1,7 +1,13 @@
 from rest_framework import serializers
 
-from models import WmsLayer, GeoServerRaster, DataFile
+from models import WmsLayer, GeoServerRaster, DataFile, SpatialRefSys
 from tagging.models import Tag
+
+
+class SpatialRefSysSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = SpatialRefSys
+        fields = ('srid', 'ref_sys_code')
 
 
 class WmsLayerSerializer(serializers.ModelSerializer):
@@ -12,12 +18,16 @@ class WmsLayerSerializer(serializers.ModelSerializer):
 
 class DataFileSerializer(serializers.ModelSerializer):
     uploaded_by = serializers.StringRelatedField(many=False)
+    srs = SpatialRefSysSerializer()
+
     class Meta:
         model = DataFile
-        fields = ('id', 'name', 'file', 'date_uploaded', 'date_modified', 'uploaded_by', 'file_type', 'tags')
+        fields = ('id', 'name', 'file', 'date_uploaded', 'date_modified', 'uploaded_by', 'file_type', 'tags', 'srs')
+
 
 class GeoTiffSerializer(serializers.ModelSerializer):
     uploaded_by = serializers.StringRelatedField(many=False)
+
     class Meta:
         model = GeoServerRaster
         fields = ('id', 'name', 'file', 'srs_code', 'date_uploaded', 'date_modified', 'uploaded_by', 'tags', 'full_geoserver_layer_name')

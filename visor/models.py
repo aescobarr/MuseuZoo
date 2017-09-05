@@ -12,6 +12,25 @@ import os
 FILE_TYPES = (('shp', 'ShapeFile'), ('csv', 'Comma separated values(csv)'),)
 
 
+class SpatialRefSys(models.Model):
+    srid = models.IntegerField(db_column='srid',primary_key=True)
+    auth_name = models.TextField(db_column='auth_name')
+    auth_srid = models.DecimalField(db_column='auth_srid', max_digits=10, decimal_places=0)
+    srtext = models.TextField(db_column='srtext')
+    proj4text = models.TextField(db_column='proj4text')
+
+    class Meta:
+        managed = False
+        db_table = "spatial_ref_sys"
+
+    @property
+    def ref_sys_code(self):
+        return "{0}:{1}".format(self.auth_name, self.auth_srid)
+
+    #def __unicode__(self):
+        #return self.ref_sys_code
+
+
 # Create your models here.
 class WmsLayer(models.Model):
     name = models.CharField(max_length=50)
@@ -52,6 +71,7 @@ class GeoServerRaster(models.Model):
     srs_code = models.CharField(max_length=10, blank=True, null=True)
     geoserver_workspace = models.CharField(max_length=50, blank=True, null=True)
     geoserver_layername = models.CharField(max_length=50, blank=True, null=True)
+    raster = models.RasterField(blank=True, null=True)
     tags = TagField()
 
     @property
@@ -70,9 +90,11 @@ class DataFile(models.Model):
     name = models.CharField(max_length=50)
     file = models.FileField(upload_to=conf.LOCAL_DATAFILE_ROOT_DIRECTORY, validators=[validate_datafile_extension])
     date_uploaded = models.DateTimeField(auto_now_add=True, blank=True)
-    file_type = models.CharField(max_length=5, choices=FILE_TYPES)
+    file_type = models.CharField(max_length=5, choices=FILE_TYPES, default='csv')
     date_modified = models.DateTimeField(auto_now=True)
     uploaded_by = models.ForeignKey(User, related_name="data_files")
+    srs = models.ForeignKey(SpatialRefSys, related_name="data_files_by_srs", default=4326)
+    points_geo = models.MultiPointField(blank=True, null=True, srid=4326)
     tags = TagField()
 
 

@@ -20,7 +20,9 @@ from visor.helpers import delete_geoserver_store
 from django import forms
 from django.contrib.auth.decorators import login_required
 from visor.helpers import get_coverage_srs
+from tasks import process_file_geoserver, process_datafile
 import museuzoo.settings as conf
+from django.contrib.gis.gdal import GDALRaster
 
 
 @login_required
@@ -37,6 +39,7 @@ def datafile_create(request):
             datafile = form.save(commit=False)
             datafile.uploaded_by = this_user
             datafile.save()
+            process_datafile.delay(datafile.file, datafile.id)
             return HttpResponseRedirect(reverse('datafile_list'))
     else:
         form = DataFileForm()
@@ -76,13 +79,17 @@ def geotiff_create(request):
         form = GeoServerRasterForm(request.POST,request.FILES)
         if form.is_valid():
             geotiff = form.save(commit=False)
+            #process_file_geoserver(geotiff.file)
             geotiff.uploaded_by = this_user
             layer_name = os.path.splitext(geotiff.file.name)[0]
-            srs = get_coverage_srs(layer_name)
-            geotiff.srs_code = srs
+            #srs = get_coverage_srs(layer_name)
+            #geotiff.srs_code = srs
             geotiff.geoserver_layername = layer_name
             geotiff.geoserver_workspace = conf.GEOSERVER_WORKSPACE
+            #raster = GDALRaster(conf.LOCAL_RASTER_ROOT + "/" + geotiff.file.name,write=True)
+            #geotiff.raster = raster
             geotiff.save()
+            process_file_geoserver.delay(geotiff.file, geotiff.id)
             return HttpResponseRedirect(reverse('geotiff_list'))
     else:
         form = GeoServerRasterForm()
