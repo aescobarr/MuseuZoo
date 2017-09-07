@@ -1,4 +1,5 @@
 $(document).ready(function() {
+    var geoJsonLayer;
     var table = $('#datafile_list').DataTable( {
         "ajax": {
             "url": _datafile_list_url,
@@ -31,4 +32,24 @@ $(document).ready(function() {
             "selector": 'td:first-child'
         }
     } );
+
+    table.on( 'select', function ( e, dt, type, indexes ) {
+        if ( type === 'row' ) {
+            var data = table.rows( indexes ).data();
+            json = JSON.parse(data[0].geometry_geojson);
+            geoJsonLayer = L.geoJson().addTo(map);
+            geoJsonLayer.addData(json);
+        }
+    } );
+
+    table.on( 'deselect', function ( e, dt, type, indexes ) {
+        map.eachLayer(
+            function(layer){
+                if(layer != osm && layer == geoJsonLayer){
+                    map.removeLayer(layer);
+                }
+            }
+        );
+    });
+
 } );

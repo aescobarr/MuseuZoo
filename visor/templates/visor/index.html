@@ -7,6 +7,8 @@
 <script>
     var _geotiff_list_url = "{% url 'geotiffs-list' %}";
     var _datafile_list_url = "{% url 'datafiles-list' %}";
+    var _operation_create_url = "{% url 'operations-list' %}";
+    var _user_id = {{ request.user.id }};
 </script>
 {% endblock %}
 
@@ -21,6 +23,7 @@
     #map { height: 400px; }
     #geotiff_list_container { float:left; width: 50%; padding: 20px;}
     #datafile_list_container { float:left; width: 50%; padding: 20px;}
+    #result_window { padding: 20px; }
 </style>
 {% endblock %}
 
@@ -70,15 +73,23 @@
             </div>
         </div>
     </div>-->
-    <div>
-        <div>
+    <div id="result_window" class="row">
+        <div class="col-lg-3">
+            <button id="creua" type="button" class="btn btn-success">Creua raster(s) i fitxer de dades</button>
+        </div>
+        <div class="col-lg-2">
+
+        </div>
+    </div>
+    <div class="row">
+        <!--<div>-->
             <div id="geotiff_list_container">
                 <table id="geotiff_list"></table>
             </div>
             <div id="datafile_list_container">
                 <table id="datafile_list"></table>
             </div>
-        </div>
+        <!--</div>-->
     </div>
 </div>
 {% endblock %}
@@ -98,6 +109,7 @@
         {% endfor %}
     </script>
     <script src="{% static 'visor/javascript/visor.js' %}" ></script>
+    <script src="{% static 'visor/javascript/visor_extra.js' %}" ></script>
     <script src="{% static 'sidebar-v2/js/jquery-sidebar.min.js' %}" ></script>
     <script src="{% static 'jquery-ui/jquery-ui.min.js' %}"></script>
     <script src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>

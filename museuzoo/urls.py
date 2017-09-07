@@ -13,6 +13,7 @@ from django.contrib.auth.views import login,logout
 router = routers.DefaultRouter()
 router.register(r'geotiffs', views.GeotiffViewSet, base_name='geotiffs')
 router.register(r'datafiles', views.DataFileViewSet, base_name='datafiles')
+router.register(r'operations', views.OperationViewSet, base_name='operations')
 router.register(r'tags', views.TagViewSet, 'tags')
 
 

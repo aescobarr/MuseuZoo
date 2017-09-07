@@ -1,6 +1,7 @@
 from rest_framework import serializers
 
-from models import WmsLayer, GeoServerRaster, DataFile, SpatialRefSys
+from models import WmsLayer, GeoServerRaster, DataFile, SpatialRefSys, Operation
+from django.contrib.auth.models import User
 from tagging.models import Tag
 
 
@@ -22,7 +23,7 @@ class DataFileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = DataFile
-        fields = ('id', 'name', 'file', 'date_uploaded', 'date_modified', 'uploaded_by', 'file_type', 'tags', 'srs')
+        fields = ('id', 'name', 'file', 'date_uploaded', 'date_modified', 'uploaded_by', 'file_type', 'tags', 'srs', 'geometry_geojson')
 
 
 class GeoTiffSerializer(serializers.ModelSerializer):
@@ -37,3 +38,9 @@ class TagSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tag
         fields = ('id', 'name')
+
+
+class OperationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Operation
+        fields = ('id', 'raster_operator', 'file_operator', 'performed_on', 'performed_by', 'result', 'execution_log')

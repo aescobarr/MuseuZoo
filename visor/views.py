@@ -4,10 +4,10 @@ from django.shortcuts import render, get_object_or_404
 from django.views.generic import UpdateView, ListView
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template.loader import render_to_string
-from visor.models import WmsLayer,GeoServerRaster, DataFile
+from visor.models import WmsLayer,GeoServerRaster, DataFile, Operation
 from rest_framework.exceptions import ParseError
 from rest_framework.response import Response
-from serializers import WmsLayerSerializer, GeoTiffSerializer, TagSerializer, DataFileSerializer
+from serializers import WmsLayerSerializer, GeoTiffSerializer, TagSerializer, DataFileSerializer, OperationSerializer
 from owslib.wms import WebMapService
 from django.middleware.csrf import get_token
 from django.core.urlresolvers import reverse
@@ -20,9 +20,10 @@ from visor.helpers import delete_geoserver_store
 from django import forms
 from django.contrib.auth.decorators import login_required
 from visor.helpers import get_coverage_srs
-from tasks import process_file_geoserver, process_datafile
+from tasks import process_file_geoserver, process_datafile, cross_files_and_save_result
 import museuzoo.settings as conf
 from django.contrib.gis.gdal import GDALRaster
+from rest_framework.settings import api_settings
 
 
 @login_required
@@ -39,7 +40,7 @@ def datafile_create(request):
             datafile = form.save(commit=False)
             datafile.uploaded_by = this_user
             datafile.save()
-            process_datafile.delay(datafile.file, datafile.id)
+            process_datafile.delay(datafile.file.name, datafile.id)
             return HttpResponseRedirect(reverse('datafile_list'))
     else:
         form = DataFileForm()
@@ -190,6 +191,7 @@ class DataFileViewSet(viewsets.ModelViewSet):
             pass
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+
 class GeotiffViewSet(viewsets.ModelViewSet):
     serializer_class = GeoTiffSerializer
 
@@ -222,3 +224,29 @@ class TagViewSet(viewsets.ReadOnlyModelViewSet):
         return queryset
 
     serializer_class = TagSerializer
+
+
+class OperationViewSet(viewsets.ModelViewSet):
+    serializer_class = OperationSerializer
+
+    def get_queryset(self):
+        queryset = Operation.objects.all()
+        return queryset
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        operation_id = serializer.data['id']
+        cross_files_and_save_result.delay(operation_id)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def perform_create(self, serializer):
+        serializer.save()
+
+    def get_success_headers(self, data):
+        try:
+            return {'Location': data[api_settings.URL_FIELD_NAME]}
+        except (TypeError, KeyError):
+            return {}

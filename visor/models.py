@@ -97,11 +97,20 @@ class DataFile(models.Model):
     points_geo = models.MultiPointField(blank=True, null=True, srid=4326)
     tags = TagField()
 
+    @property
+    def geometry_geojson(self):
+        return self.points_geo.geojson
+
 
 class Operation(models.Model):
-    raster_operator = models.ForeignKey(GeoServerRaster)
+    #raster_operator = models.ForeignKey(GeoServerRaster)
+    raster_operator = models.ManyToManyField(GeoServerRaster)
     file_operator = models.ForeignKey(DataFile)
     performed_on = models.DateTimeField(auto_now_add=True, blank=True)
     performed_by = models.ForeignKey(User)
-    result = models.ForeignKey(DataFile, related_name="result",blank=True,null=True)
+    finished = models.BooleanField(default=False)
+    #result = models.ForeignKey(DataFile, related_name="result",blank=True,null=True)
+    #result = models.TextField(blank=True,null=True)
+    result_path = models.CharField(max_length=255,blank=True,null=True)
     execution_log = models.TextField(blank=True,null=True)
+

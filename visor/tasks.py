@@ -1,10 +1,13 @@
 from celery import task
 import museuzoo.settings as conf
 import os
+import errno
 from geoserver.catalog import Catalog
-from models import GeoServerRaster
+from models import GeoServerRaster, DataFile, Operation
 from django.contrib.gis.gdal import GDALRaster
-from django.contrib.gis.geos import MultiPoint, Point
+from django.contrib.gis.geos import MultiPoint, Point, GEOSGeometry
+from django.db import connection
+import csv
 
 
 def get_coverage_srs(name):
@@ -36,12 +39,68 @@ def process_file_geoserver(file, geotiff_id):
     #geotiff.geoserver_workspace = conf.GEOSERVER_WORKSPACE
     geotiff.save()
 
+
 @task
 def process_datafile(file, datafile_id):
+    print "File is: " + file
     multi = MultiPoint(srid=4326)
-    print "DataFile id is:" + datafile_id
-    '''
-    for point in file
-        p = Point()
-        multi.append(p)
-    '''
+    print "DataFile id is:" + str(datafile_id)
+    datafile_filepath = conf.LOCAL_DATAFILE_ROOT + "/" + os.path.basename(file)
+    with open(datafile_filepath,'rb') as csvfile:
+        reader = csv.reader(csvfile, delimiter=';')
+        headers = reader.next()
+        print "Headers: "
+        print headers
+        coord_x_index = headers.index("coord_x")
+        coord_y_index = headers.index("coord_y")
+        for row in reader:
+            coord_x = row[coord_x_index]
+            coord_y = row[coord_y_index]
+            wkt_point = 'POINT( {0} {1} )'
+            p = GEOSGeometry(wkt_point.format(coord_x, coord_y), srid=4326)
+            multi.append(p)
+    datafile = DataFile.objects.get(pk=datafile_id)
+    datafile.points_geo = multi
+    datafile.save()
+
+@task
+def cross_files_and_save_result(operation_id):
+    operation = Operation.objects.get(pk=operation_id)
+    file_operator_id = operation.file_operator.id
+    rasters = operation.raster_operator.all()
+    raster_id = -1
+    for raster in rasters:
+        raster_id = raster.id
+    query = """ select st_value(r.raster,subquery.location), subquery.coord_x, subquery.coord_y
+                from
+                visor_geoserverraster r,
+                (
+                    select
+                    (ST_DUMP(d.points_geo)).geom as location,
+                    ST_X((ST_DUMP(d.points_geo)).geom) as coord_x,
+                    ST_Y((ST_DUMP(d.points_geo)).geom) as coord_y
+                    from
+                    visor_datafile d
+                    where d.id={0}
+                ) as subquery
+                where
+                r.id={1} AND
+                ST_INTERSECTS(subquery.location,r.raster)
+    """
+    loaded_query = query.format(file_operator_id, raster_id)
+    if not os.path.exists(os.path.dirname(conf.LOCAL_RESULTS_ROOT + "/")):
+        print conf.LOCAL_RESULTS_ROOT + " does not exist, creating"
+        try:
+            os.makedirs(os.path.dirname(conf.LOCAL_RESULTS_ROOT + "/"))
+            print "Directory created"
+        except OSError as exc:  # Guard against race condition
+            if exc.errno != errno.EEXIST:
+                raise
+    else:
+        print conf.LOCAL_RESULTS_ROOT + " exists, doing nothing!"
+    with connection.cursor() as cursor:
+        cursor.execute(loaded_query)
+        result = cursor.fetchall()
+        with open( conf.LOCAL_RESULTS_ROOT + "/" + str(operation_id) + ".csv", "wb") as f:
+            writer = csv.writer(f,delimiter=';')
+            writer.writerows(result)
