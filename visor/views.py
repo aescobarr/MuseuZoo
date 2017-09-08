@@ -24,6 +24,7 @@ from tasks import process_file_geoserver, process_datafile, cross_files_and_save
 import museuzoo.settings as conf
 from django.contrib.gis.gdal import GDALRaster
 from rest_framework.settings import api_settings
+from djcelery.models import TaskMeta
 
 
 @login_required
@@ -97,6 +98,12 @@ def geotiff_create(request):
     return render(request, 'visor/geotiff_create.html', {'form' : form})
 
 
+@login_required
+def operation_detail(request, id=None):
+    op = get_object_or_404(Operation,pk=id)
+    return render(request, 'visor/operation_detail.html',context={'operation':op})
+
+
 # Create your views here.
 def index(request):
     layers = WmsLayer.objects.all()
@@ -121,6 +128,18 @@ def layerloader(request):
 def add_geotiff(request):
     csrf_token = get_token(request)
     return render(request, 'visor/import.html', {'csrf_token': csrf_token})
+
+
+@login_required
+@api_view(['GET'])
+def operation_json_detail(request, id=None):
+    if request.method == 'GET':
+        op = get_object_or_404(Operation,pk=id)
+        if op.task_id is not None:
+            tm = TaskMeta.objects.get(task_id=op.task_id)
+            resp = {'op_code':'op_available', 'status': tm.status, 'date_done': tm.date_done, 'traceback': tm.traceback }
+            return Response(resp)
+        return Response([{'op_code': 'op_not_available'}])
 
 
 @login_required

@@ -7,6 +7,7 @@ from models import GeoServerRaster, DataFile, Operation
 from django.contrib.gis.gdal import GDALRaster
 from django.contrib.gis.geos import MultiPoint, Point, GEOSGeometry
 from django.db import connection
+from djcelery.models import TaskMeta
 import csv
 
 
@@ -63,9 +64,12 @@ def process_datafile(file, datafile_id):
     datafile.points_geo = multi
     datafile.save()
 
-@task
-def cross_files_and_save_result(operation_id):
+@task(bind=True)
+def cross_files_and_save_result(self, operation_id):
     operation = Operation.objects.get(pk=operation_id)
+    _task_id = self.request.id
+    operation.task_id = _task_id
+    operation.save()
     file_operator_id = operation.file_operator.id
     rasters = operation.raster_operator.all()
     raster_id = -1
@@ -102,5 +106,7 @@ def cross_files_and_save_result(operation_id):
         cursor.execute(loaded_query)
         result = cursor.fetchall()
         with open( conf.LOCAL_RESULTS_ROOT + "/" + str(operation_id) + ".csv", "wb") as f:
-            writer = csv.writer(f,delimiter=';')
+            writer = csv.writer(f, delimiter=';')
             writer.writerows(result)
+    operation.result_path = conf.LOCAL_RESULTS_ROOT_DIRECTORY + "/" + str(operation_id) + ".csv"
+    operation.save()

@@ -7,7 +7,6 @@ var creua = function(){
         alert("Cal triar com a mínim un ràster i un fitxer de dades");
     }else{
         var operation = instantiate_op();
-        //alert(operation);
         create_op(operation);
     }
 };

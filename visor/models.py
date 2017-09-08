@@ -6,6 +6,7 @@ from django.contrib.gis.geos import GEOSGeometry
 from tagging.fields import TagField
 from django.forms import ValidationError
 from django.contrib.auth.models import User
+from djcelery.models import TaskMeta
 import museuzoo.settings as conf
 import os
 
@@ -108,9 +109,5 @@ class Operation(models.Model):
     file_operator = models.ForeignKey(DataFile)
     performed_on = models.DateTimeField(auto_now_add=True, blank=True)
     performed_by = models.ForeignKey(User)
-    finished = models.BooleanField(default=False)
-    #result = models.ForeignKey(DataFile, related_name="result",blank=True,null=True)
-    #result = models.TextField(blank=True,null=True)
-    result_path = models.CharField(max_length=255,blank=True,null=True)
-    execution_log = models.TextField(blank=True,null=True)
-
+    result_path = models.CharField(max_length=255, blank=True, null=True)
+    task_id = models.CharField(max_length=255, blank=True, null=True)

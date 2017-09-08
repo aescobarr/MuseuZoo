@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}Detall operacio{% endblock %}
+
+{% block extrahead %}
+<script>
+    var _json_datasource = "{% url 'operation_json_detail' operation.id %}";
+    var _result_file = '{{ operation.result_path }}';
+</script>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h2>Detall operació</h2>
+        <table class="operation_table">
+            <tr>
+                <th>Operació creada: </th>
+                <td>{{ operation.performed_on }}</td>
+            </tr>
+            <tr>
+                <th>Fitxer de dades: </th>
+                <td><a href="{{ operation.file_operator.file.url }}" target="_blank">{{ operation.file_operator.file.name }}</a></td>
+            </tr>
+            <tr>
+                <th>Ràsters: </th>
+                <td>
+                    {% for raster in operation.raster_operator.all %}
+                        <a href="{{ raster.file.url }}" target="_blank">{{ raster.file.name }}</a>
+                    {% endfor %}
+                </td>
+            </tr>
+        </table>
+        <h2>Estat procés<i id="status-spinner" class="fa fa-spinner fa-spin" aria-hidden="true" style="display: none;"></i></h2>
+        <table>
+            <tr>
+                <th>Estatus execució: </th>
+                <td id="_td_status">???</td>
+            </tr>
+            <tr>
+                <th>Missatges d'error: </th>
+                <td id="_td_stacktrace">???</td>
+            </tr>
+            <tr>
+                <th>Operació finalitzada a: </th>
+                <td id="_td_timestamp">???</td>
+            </tr>
+            <tr>
+                <th>Fitxer de resultats:</th>
+                <td id="_td_results">???</td>
+            </tr>
+        </table>
+    </div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'jquery-ui/jquery-ui.min.js' %}"></script>
+    <script src="{% static 'visor/javascript/csrf_utils.js'%}"></script>
+    <script src="{% static 'visor/javascript/operation_detail.js' %}"></script>
+{% endblock %}

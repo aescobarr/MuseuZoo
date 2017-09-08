@@ -43,4 +43,4 @@ class TagSerializer(serializers.ModelSerializer):
 class OperationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Operation
-        fields = ('id', 'raster_operator', 'file_operator', 'performed_on', 'performed_by', 'result', 'execution_log')
+        fields = ('id', 'raster_operator', 'file_operator', 'performed_on', 'performed_by', 'result_path')
