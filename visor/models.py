@@ -111,3 +111,11 @@ class Operation(models.Model):
     performed_by = models.ForeignKey(User)
     result_path = models.CharField(max_length=255, blank=True, null=True)
     task_id = models.CharField(max_length=255, blank=True, null=True)
+
+    @property
+    def status(self):
+        if self.task_id is None:
+            return 'STILL_PROCESSING'
+        else:
+            tm = TaskMeta.objects.get(task_id=self.task_id)
+            return tm.status

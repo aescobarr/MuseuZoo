@@ -58,7 +58,9 @@ $(document).ready(function() {
             ,{ "data": "performed_on" }
             ,{ "data": "performed_by" }
             ,{ "data": "result_path" }
+            ,{ "data": "status" }
             ,{ "data": "button_delete" }
+            ,{ "data": "button_detall" }
         ],
         "columnDefs": [
             {
@@ -107,9 +109,32 @@ $(document).ready(function() {
                 }
             },
             {
+                "targets":5,
+                "title": "Status",
+                "render": function(data, type, row, meta){
+                    if(data=='SUCCESS'){
+                        data = '<i class="fa fa-check" style="color:#01DF01;" aria-hidden="true"></i>';
+                    }else if(data=='FAILURE'){
+                        data = '<i class="fa fa-times" style="color:#FF0000;" aria-hidden="true"></i>';
+                    }else{
+                        data = '<i id="status-spinner" class="fa fa-spinner fa-spin" aria-hidden="true" style="display: none;"></i>';
+                    }
+                    /*if(type === 'display'){
+                        data = '<a href="/media/' + data + '">' + data + '</a>';
+                    }*/
+                    return data;
+                }
+            },
+            {
                 "targets": -1,
                 "data": null,
                 "defaultContent": "<button class=\"delete_button btn btn-danger\">Esborrar</button>",
+                "sortable": false
+            },
+            {
+                "targets": -2,
+                "data": null,
+                "defaultContent": "<button class=\"edit_button btn btn-info\">Detall operació</button>",
                 "sortable": false
             }
         ]
@@ -120,6 +145,16 @@ $(document).ready(function() {
         var id = row.data().id
         //alert(id);
         confirmDialog("Segur que vols esborrar?",id);
+    });
+
+    $('#operation_list tbody').on('click', 'td button.edit_button', function () {
+        var tr = $(this).closest('tr');
+        var row = table.row( tr );
+        var id = row.data().id
+        url = "/operation/" + id
+        window.open(url,'_blank');
+        //alert(id);
+        //confirmDialog("Segur que vols esborrar?",id);
     });
 
 } );

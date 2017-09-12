@@ -51,4 +51,4 @@ class OperationDetailSerializer(serializers.ModelSerializer):
     raster_operator = GeoTiffSerializer(many=True)
     class Meta:
         model = Operation
-        fields = ('id', 'raster_operator', 'file_operator', 'performed_on', 'performed_by', 'result_path')
+        fields = ('id', 'raster_operator', 'file_operator', 'performed_on', 'performed_by', 'result_path', 'status')
