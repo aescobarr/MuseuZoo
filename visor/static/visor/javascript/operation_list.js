@@ -7,10 +7,8 @@ $(document).ready(function() {
                 width: 'auto', resizable: false,
                 buttons: {
                     Yes: function () {
-                        delete_geotiff(id);
+                        delete_operation(id);
                         $(this).dialog("close");
-                        //table.ajax.reload();
-                        //$('#geotiff_list').DataTable().ajax.reload();
                     },
                     No: function () {
                         $(this).dialog("close");
@@ -22,9 +20,9 @@ $(document).ready(function() {
         });
     };
 
-    var delete_geotiff = function(id){
+    var delete_operation = function(id){
         $.ajax({
-            url: _geotiff_delete_url + id,
+            url: _operation_delete_url + id,
             method: "DELETE",
             beforeSend: function(xhr, settings) {
                 if (!csrfSafeMethod(settings.type)) {
@@ -41,9 +39,9 @@ $(document).ready(function() {
             }
         });
     };
-    var table = $('#geotiff_list').DataTable( {
+    var table = $('#operation_list').DataTable( {
         "ajax": {
-            "url": _geotiff_list_url,
+            "url": _operation_list_url,
             "dataType": 'json',
             "contentType": "application/json; charset=utf-8",
             "dataSrc": function (json) {
@@ -55,89 +53,73 @@ $(document).ready(function() {
         "stateSave": true,
         //"responsive": true,
         "columns": [
-            { "data": "name" }
-            ,{ "data": "file" }
-            ,{ "data": "srs_code" }
-            ,{ "data": "uploaded_by" }
-            ,{ "data": "date_uploaded" }
-            ,{ "data": "date_modified" }
-            ,{ "data": "tags" }
+            { "data": "raster_operator" }
+            ,{ "data": "file_operator" }
+            ,{ "data": "performed_on" }
+            ,{ "data": "performed_by" }
+            ,{ "data": "result_path" }
             ,{ "data": "button_delete" }
-            ,{ "data": "button_edit" }
         ],
         "columnDefs": [
             {
                 "targets":0,
-                "title": "Name"
+                "title": "Raster",
+                "render": function(data, type, row, meta){
+                    if(type === 'display'){
+                        var output = new Array();
+                        output.push('<ul>');
+                        for(var i = 0; i < data.length; i++){
+                            bit = data[0];
+                            output.push('<li><a href="' + bit.file + '">' + bit.name + '</a></li>');
+                        }
+                        output.push('</ul>');
+                        data = output.join('');
+                    }
+                    return data;
+                }
             },
             {
                 "targets":1,
-                "title": "File",
+                "title": "Fitxer",
                 "render": function(data, type, row, meta){
                     if(type === 'display'){
-                        data = '<a href="' + data + '">' + data + '</a>';
+                        data = '<a href="' + data.file + '">' + data.name + '</a>';
                     }
                     return data;
                 }
             },
             {
                 "targets":2,
-                "title": "SRS"
+                "title": "Executat a"
             },
             {
                 "targets":3,
-                "title": "Uploaded by"
+                "title": "Usuari"
             },
             {
                 "targets":4,
-                "title": "Date Uploaded",
-                "type": "date",
-                "render": function(value){
-                    var date = new Date(value);
-                    var month = date.getMonth() + 1;
-                    return date.getDate() + "/" + (month.length > 1 ? month : "0" + month) + "/" + date.getFullYear() + " - " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+                "title": "Fitxer de resultats",
+                "render": function(data, type, row, meta){
+                    if(type === 'display'){
+                        data = '<a href="/media/' + data + '">' + data + '</a>';
+                    }
+                    return data;
                 }
-            },
-            {
-                "targets":5,
-                "title": "Date Modified",
-                "type": "date",
-                "render": function(value){
-                    var date = new Date(value);
-                    var month = date.getMonth() + 1;
-                    return date.getDate() + "/" + (month.length > 1 ? month : "0" + month) + "/" + date.getFullYear() + " - " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
-                }
-            },
-            {
-                "targets":6,
-                "title": "Tags"
-            },
-            {
-                "targets": -2,
-                "data": null,
-                "defaultContent": "<button class=\"delete_button btn btn-danger\">Esborrar</button>",
-                "sortable": false
             },
             {
                 "targets": -1,
                 "data": null,
-                "defaultContent": "<button class=\"edit_button btn btn-info\">Editar</button>",
+                "defaultContent": "<button class=\"delete_button btn btn-danger\">Esborrar</button>",
                 "sortable": false
-            },
+            }
         ]
     } );
-    $('#geotiff_list tbody').on('click', 'td button.delete_button', function () {
+    $('#operation_list tbody').on('click', 'td button.delete_button', function () {
         var tr = $(this).closest('tr');
         var row = table.row( tr );
         var id = row.data().id
         //alert(id);
         confirmDialog("Segur que vols esborrar?",id);
-    });
-    $('#geotiff_list tbody').on('click', 'td button.edit_button', function () {
-        var tr = $(this).closest('tr');
-        var row = table.row( tr );
-        var id = row.data().id
-        window.location.href = _geotiff_update_url + id;
     });
 
 } );

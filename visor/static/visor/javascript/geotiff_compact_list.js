@@ -1,4 +1,36 @@
 $(document).ready(function() {
+
+    var handleJson=function(data) {
+        for (var i = 0; i < data.features.length; i++) {
+        var feature = data.features[i];
+        console.log(feature)
+            L.popup()
+            .setLatLng(e.latlng)
+            .setContent(L.Util.template("<h2>{appcode}</h2><p>{url}</p>", feature.properties))
+            .openOn(map);
+        }
+    }
+
+    /*
+    var identify = function (e){
+	    var BBOX = map.getBounds().toBBoxString();
+        var WIDTH = map.getSize().x;
+        var HEIGHT = map.getSize().y;
+        var X = Math.round(map.layerPointToContainerPoint(e.layerPoint).x);
+        var Y = Math.round(map.layerPointToContainerPoint(e.layerPoint).y);
+        var url = 'http://127.0.0.1:8080/geoserver/wms/?SERVICE=WMS&VERSION=1.1.1&REQUEST=GetFeatureInfo&layers=geomuseu:rcp26b709_4326&BBOX='+BBOX+'&FEATURE_COUNT=5&info_format=application/json&HEIGHT='+HEIGHT+'&WIDTH='+WIDTH+'&query_layers=geomuseu:rcp26b709_4326&SRS=EPSG:4326&buffer=15&X='+X+'&Y='+Y;
+
+        $.ajax({
+            url:url,
+            datatype: "json",
+            type: "GET",
+            success:handleJson
+        });
+    }
+
+	map.on('click',identify);
+	*/
+
     var table = $('#geotiff_list').DataTable( {
         "ajax": {
             "url": _geotiff_list_url,

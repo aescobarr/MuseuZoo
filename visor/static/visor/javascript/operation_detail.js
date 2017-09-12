@@ -15,7 +15,7 @@ $(document).ready(function() {
                  $('#_td_status').html(data.status);
                  $('#_td_stacktrace').html(data.traceback);
                  $('#_td_timestamp').html(data.date_done);
-                 $('#_td_results').html('<a href="/media/' + _result_file + ">' + _result_file + '</a>');
+                 $('#_td_results').html('<a href="/media/' + _result_file + '">' + _result_file + '</a>');
             },
             error: function(jqXHR, textStatus, errorThrown){
                 $('#status-spinner').hide();

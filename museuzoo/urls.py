@@ -5,7 +5,7 @@ from visor import views
 from rest_framework import routers
 from fine_uploader.views import UploadView
 from fine_uploader.views import home
-from visor.views import geotiff_create, geotiff_list, geotiff_update, datafile_list, datafile_create, datafile_update, operation_detail, operation_json_detail
+from visor.views import geotiff_create, geotiff_list, geotiff_update, datafile_list, datafile_create, datafile_update, operation_detail, operation_json_detail, operation_list
 from django.conf.urls.static import static
 from django.contrib.auth.views import login,logout
 
@@ -31,6 +31,7 @@ urlpatterns = [
     url(r'^geotiff/update/$', geotiff_update, name='geotiff_update_no_id'),
     url(r'^geotiff/update/(?P<id>\d+)/$', geotiff_update, name='geotiff_update'),
     url(r'^operation/(?P<id>\d+)/$', operation_detail, name='operation_detail'),
+    url(r'^operation/list$', operation_list, name='operation_list'),
     url(r'^layer_list$', views.WmsLayerListView.as_view(), name='layer_list'),
     url(r'^upload(?:/(?P<qquuid>\S+))?', UploadView.as_view(), name='upload'),
     url(r'^upload_list$', UploadView.as_view(), name='upload'),

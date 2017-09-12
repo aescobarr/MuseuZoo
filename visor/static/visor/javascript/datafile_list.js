@@ -32,11 +32,11 @@ $(document).ready(function() {
                 }
             },
             success: function( data, textStatus, jqXHR ) {
-                 alert("Deleted!");
+                 alert("Esborrat amb èxit!");
                  table.ajax.reload();
             },
             error: function(jqXHR, textStatus, errorThrown){
-                alert("Error deleting");
+                alert("Error esborrant");
             }
         });
     };
@@ -114,13 +114,13 @@ $(document).ready(function() {
             {
                 "targets": -2,
                 "data": null,
-                "defaultContent": "<button class=\"delete_button btn btn-danger\">Delete</button>",
+                "defaultContent": "<button class=\"delete_button btn btn-danger\">Esborrar</button>",
                 "sortable": false
             },
             {
                 "targets": -1,
                 "data": null,
-                "defaultContent": "<button class=\"edit_button btn btn-info\">Edit</button>",
+                "defaultContent": "<button class=\"edit_button btn btn-info\">Editar</button>",
                 "sortable": false
             },
         ]

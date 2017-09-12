@@ -7,7 +7,7 @@ from django.template.loader import render_to_string
 from visor.models import WmsLayer,GeoServerRaster, DataFile, Operation
 from rest_framework.exceptions import ParseError
 from rest_framework.response import Response
-from serializers import WmsLayerSerializer, GeoTiffSerializer, TagSerializer, DataFileSerializer, OperationSerializer
+from serializers import WmsLayerSerializer, GeoTiffSerializer, TagSerializer, DataFileSerializer, OperationSerializer, OperationDetailSerializer
 from owslib.wms import WebMapService
 from django.middleware.csrf import get_token
 from django.core.urlresolvers import reverse
@@ -104,7 +104,12 @@ def operation_detail(request, id=None):
     return render(request, 'visor/operation_detail.html',context={'operation':op})
 
 
-# Create your views here.
+@login_required
+def operation_list(request):
+    return render(request, 'visor/operation_list.html')
+
+
+@login_required
 def index(request):
     layers = WmsLayer.objects.all()
     rasters = GeoServerRaster.objects.all()
@@ -248,6 +253,11 @@ class TagViewSet(viewsets.ReadOnlyModelViewSet):
 class OperationViewSet(viewsets.ModelViewSet):
     serializer_class = OperationSerializer
 
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return OperationDetailSerializer
+        return OperationSerializer
+
     def get_queryset(self):
         queryset = Operation.objects.all()
         return queryset
@@ -269,3 +279,15 @@ class OperationViewSet(viewsets.ModelViewSet):
             return {'Location': data[api_settings.URL_FIELD_NAME]}
         except (TypeError, KeyError):
             return {}
+
+    def destroy(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+            file_name = instance.result_path
+            self.perform_destroy(instance)
+            # delete local file
+            file = os.path.join(museuzoo.settings.MEDIA_ROOT, file_name)
+            os.remove(file)
+        except Http404:
+            pass
+        return Response(status=status.HTTP_204_NO_CONTENT)

@@ -60,14 +60,17 @@
             <!-- Collect the nav links, forms, and other content for toggling -->
             <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
                 <ul class="nav navbar-nav navbar-right">
-                    <li>
-                        <a href="{% url 'index' %}">Map</a>
+                    <li id="page_creuament">
+                        <a href="{% url 'index' %}">Creuament capes</a>
                     </li>
-                    <li>
-                        <a href="{% url 'geotiff_list' %}">List geotiffs</a>
+                    <li id="page_list_geotiff">
+                        <a href="{% url 'geotiff_list' %}">Llistar rasters</a>
                     </li>
-                    <li>
-                        <a href="{% url 'datafile_list' %}">List datafiles</a>
+                    <li id="page_list_datafile">
+                        <a href="{% url 'datafile_list' %}">Llistar fitxers dades</a>
+                    </li>
+                    <li id="page_list_operation">
+                        <a href="{% url 'operation_list' %}">Llistar operacions</a>
                     </li>
                     <li>
                         {% if user.is_authenticated %}
@@ -93,6 +96,10 @@
     <script src="{% static 'jquery/dist/jquery.min.js' %}"></script>
     <!-- Bootstrap Core JavaScript -->
     <script src="{% static 'bootstrap/dist/js/bootstrap.min.js' %}"></script>
+    <script>
+        <!-- This selects the current active page -->
+        $('a[href="' + this.location.pathname + '"]').parents('li,ul').addClass('active');
+    </script>
     {% endblock %}
     {% block extra_js %}
     {% endblock %}

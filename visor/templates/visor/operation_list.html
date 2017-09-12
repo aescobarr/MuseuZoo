@@ -1,13 +1,12 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 
-{% block title %}Layer list{% endblock %}
+{% block title %}Llista operacions{% endblock %}
 
 {% block extrahead %}
 <script>
-    var _geotiff_update_url = "{% url 'geotiff_update_no_id' %}";
-    var _geotiff_delete_url = "{% url 'geotiffs-list' %}";
-    var _geotiff_list_url = "{% url 'geotiffs-list' %}";
+    var _operation_delete_url = "{% url 'operations-list' %}";
+    var _operation_list_url = "{% url 'operations-list' %}";
 </script>
 {% endblock %}
 
@@ -24,10 +23,7 @@
 
 {% block body %}
 <div class="container">
-    <a role="button" class="btn btn-success" href="{% url 'geotiff_create' %}">Afegir ràster</a>
-</div>
-<div class="container">
-    <table id="geotiff_list"></table>
+    <table id="operation_list"></table>
 </div>
 {% endblock %}
 
@@ -36,5 +32,5 @@
     <script src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
     <script src="{% static 'datatables.net-responsive/js/dataTables.responsive.min.js' %}"></script>
     <script src="{% static 'visor/javascript/csrf_utils.js'%}"></script>
-    <script src="{% static 'visor/javascript/geotiff_list.js'%}"></script>
+    <script src="{% static 'visor/javascript/operation_list.js'%}"></script>
 {% endblock %}

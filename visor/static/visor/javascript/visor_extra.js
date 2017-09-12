@@ -23,6 +23,7 @@ var instantiate_op = function(){
 };
 
 var create_op = function(operation){
+    $("#link_op").html('');
     $.ajax({
         url: _operation_create_url,
         method: "POST",
@@ -35,7 +36,7 @@ var create_op = function(operation){
             }
         },
         success: function( data, textStatus, jqXHR ) {
-             alert("Created!");
+             $("#link_op").html('<a href="/operation/' + data.id + '">Enllaç al resultat</a>');
         },
         error: function(jqXHR, textStatus, errorThrown){
             alert("Error " + textStatus);
