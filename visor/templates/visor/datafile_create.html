@@ -25,6 +25,14 @@
     <div class="container">
         <form enctype="multipart/form-data" action="{% url 'datafile_create' %}" method="post">
             {% csrf_token %}
+            <p>Aquest és el formulari per afegir fitxers de dades a l'aplicatiu. El fitxer ha de complir els requisits següents:</p>
+            <p>
+                <ul>
+                    <li>Fitxer csv separat per ';'</li>
+                    <li>Ha de contenir com a mínim 2 camps de coordenades, un anomenat 'coord_x' i un anomenat 'coord_y'</li>
+                    <li>Els camps de coordenades han de contenir coordenades en el sistema de referència WGS84</li>
+                </ul>
+            </p>
             <input role="button" class="btn btn-success" type="submit" value="Desar" />
             <a role="button" class="btn btn-success" href="{% url 'datafile_list' %}">Cancel·lar</a>
             <table class="datafile_table">

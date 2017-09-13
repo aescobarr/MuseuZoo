@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load staticfiles %}
+{% load tagging_tags %}
 
 {% block title %}Creuament de capes{% endblock %}
 
@@ -83,6 +84,20 @@
         </div>
     </div>
     <div class="row">
+        <div class="col-lg-6">
+            {% tag_cloud_for_model visor.GeoServerRaster as raster_tags %}
+            {% for tag in raster_tags %}
+                <span class="label label-default" style="background-color: orange;">{{ tag }}</span>
+            {% endfor %}
+        </div>
+        <div class="col-lg-6">
+            {% tag_cloud_for_model visor.DataFile as datafile_tags %}
+            {% for file in datafile_tags %}
+                <span class="label label-default" style="background-color: orange;">{{ file }}</span>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="row">
         <!--<div>-->
             <div id="geotiff_list_container">
                 <table id="geotiff_list"></table>
@@ -99,6 +114,10 @@
     <script>
         var map;
         var osm;
+        var roads;
+        var satellite;
+        var terrain;
+        var hybrid;
     </script>
     <script src="{% static 'leaflet/dist/leaflet.js' %}" ></script>
     <script src="{% static 'underscore/underscore-min.js' %}" ></script>
@@ -109,6 +128,9 @@
             rasters.push('{{ raster.full_geoserver_layer_name }}');
         {% endfor %}
     </script>
+
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAmGF2iEuPZt4fCJqxgHLZ8WMtQ7wM0Sp4" async defer></script>
+    <script src="{% static 'visor/javascript/Leaflet.GridLayer.GoogleMutant/Leaflet.GoogleMutant.js' %}" ></script>
     <script src="{% static 'visor/javascript/visor.js' %}" ></script>
     <script src="{% static 'visor/javascript/visor_extra.js' %}" ></script>
     <script src="{% static 'sidebar-v2/js/jquery-sidebar.min.js' %}" ></script>

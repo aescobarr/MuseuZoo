@@ -25,6 +25,13 @@
     <div class="container">
         <form enctype="multipart/form-data" action="{% url 'geotiff_create' %}" method="post">
             {% csrf_token %}
+            <p>Aquest és el formulari per afegir ràsters a l'aplicatiu. El fitxer raster ha de complir els requisits següents:</p>
+            <p>
+                <ul>
+                    <li>Format GeoTIFF</li>
+                    <li>Ha d'estar projectat en el sistema de referència WGS84</li>
+                </ul>
+            </p>
             <input role="button" class="btn btn-success" type="submit" value="Desar" />
             <a role="button" class="btn btn-success" href="{% url 'geotiff_list' %}">Cancel·lar</a>
             <table class="geotiff_table">

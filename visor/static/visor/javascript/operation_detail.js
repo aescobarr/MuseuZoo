@@ -19,7 +19,7 @@ $(document).ready(function() {
             },
             error: function(jqXHR, textStatus, errorThrown){
                 $('#status-spinner').hide();
-                alert("Error recuperant dades");
+                //alert("Error recuperant dades");
             }
         });
     };

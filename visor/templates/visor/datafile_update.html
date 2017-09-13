@@ -28,6 +28,11 @@
             <input role="button" class="btn btn-success" type="submit" value="Desar" />
             <a role="button" class="btn btn-success" href="{% url 'datafile_list' %}">Cancel·lar</a>
             <table class="datafile_table">
+                {{ form.as_table }}
+                <tr>
+                    <th>Tags:</th>
+                    <td><ul id="tags_list"></ul></td>
+                </tr>
                 <tr>
                     <th>File url:</th>
                     <td>{{ form.instance.file }}</td>
@@ -47,11 +52,6 @@
                 <tr>
                     <th>File type:</th>
                     <td>{{ form.instance.file_type }}</td>
-                </tr>
-                {{ form.as_table }}
-                <tr>
-                    <th>Tags:</th>
-                    <td><ul id="tags_list"></ul></td>
                 </tr>
             </table>
         </form>

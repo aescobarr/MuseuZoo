@@ -107,6 +107,7 @@ def cross_files_and_save_result(self, operation_id):
         result = cursor.fetchall()
         with open( conf.LOCAL_RESULTS_ROOT + "/" + str(operation_id) + ".csv", "wb") as f:
             writer = csv.writer(f, delimiter=';')
+            writer.writerow(["value", "coord_x", "coord_y"])
             writer.writerows(result)
     operation.result_path = conf.LOCAL_RESULTS_ROOT_DIRECTORY + "/" + str(operation_id) + ".csv"
     operation.save()

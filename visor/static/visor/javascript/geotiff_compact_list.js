@@ -46,7 +46,7 @@ $(document).ready(function() {
         //"responsive": true,
         "columns": [
             { "data": "name" }
-            ,{ "data": "srs_code" }
+            //,{ "data": "srs_code" }
             ,{ "data": "tags" }
         ],
         "columnDefs": [
@@ -54,12 +54,12 @@ $(document).ready(function() {
                 "targets":0,
                 "title": "Name"
             },
-            {
+            /*{
                 "targets":1,
                 "title": "SRS"
-            },
+            },*/
             {
-                "targets":2,
+                "targets":1,
                 "title": "Tags"
             },
 
@@ -93,7 +93,7 @@ $(document).ready(function() {
     table.on( 'deselect', function ( e, dt, type, indexes ) {
         map.eachLayer(
             function(layer){
-                if(layer != osm){
+                if(layer != osm && layer != roads && layer != satellite && layer != terrain && layer != hybrid ){
                     map.removeLayer(layer);
                 }
             }

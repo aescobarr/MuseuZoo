@@ -34,7 +34,8 @@ class GeoServerRasterForm(ModelForm):
 class DataFileUpdateForm(ModelForm):
     class Meta:
         model = DataFile
-        fields = ['name', 'srs', 'tags']
+        #fields = ['name', 'srs', 'tags']
+        fields = ['name', 'tags']
         widgets = {'name': forms.TextInput, 'tags': forms.HiddenInput}
 
 
