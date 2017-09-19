@@ -29,6 +29,8 @@
     #result_window { padding: 20px; }
     .hidden-raster-id-value { display:none; }
     .hidden-datafile-id-value { display:none; }
+    table.dataTable tr.odd { background-color: #E2E4FF; }
+    table.dataTable tr.even { background-color: white; }
 </style>
 {% endblock %}
 
@@ -78,6 +80,7 @@
             </div>
         </div>
     </div>-->
+    <hr/>
     <div id="result_window" class="row">
         <div class="col-lg-3">
             <span>Rasters seleccionats:</span>
@@ -96,6 +99,7 @@
 
         </div>
     </div>
+    <hr/>
     <div class="row">
         <!--<div class="col-lg-6">
             {% tag_cloud_for_model visor.GeoServerRaster as raster_tags %}
@@ -155,6 +159,7 @@
     <script src="{% static 'visor/javascript/csrf_utils.js'%}"></script>
     <script src="{% static 'visor/javascript/geotiff_compact_list.js'%}"></script>
     <script src="{% static 'visor/javascript/datafile_compact_list.js'%}"></script>
+    <script src="{% static 'visor/javascript/L.TileLayer.BetterWMS.js' %}" ></script>
     <script src="{% static 'visor/javascript/visor.js' %}" ></script>
     <script src="{% static 'visor/javascript/visor_extra.js' %}" ></script>
 {% endblock %}

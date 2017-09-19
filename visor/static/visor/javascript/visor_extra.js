@@ -122,7 +122,8 @@ $(document).ready(function() {
             if (wmsLayers[id.toString()]){
                 wmsLayer = wmsLayers[id.toString()];
             }else{
-                wmsLayer = L.tileLayer.wms(wms_url,{layers: layer,transparent: true});
+                //wmsLayer = L.tileLayer.wms(wms_url,{layers: layer,transparent: true});
+                wmsLayer = L.tileLayer.betterWms(wms_url,{layers: layer,transparent: true});
                 wmsLayers[id.toString()] = wmsLayer;
             }
             wmsLayer.setOpacity(0.4);
