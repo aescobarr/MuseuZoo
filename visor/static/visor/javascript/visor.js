@@ -37,17 +37,9 @@ $( document ).ready(function() {
         "Google hybrid": hybrid
     };
 
-    L.control.layers(baseMaps).addTo(map);
-	//var sidebar = $('#sidebar').sidebar();
+    var overlays = {};
 
-	/*for (var i = 0; i < rasters.length; i++){
-	    var wmsLayer = L.tileLayer.wms(
-	        wms_url,
-	        {
-	            layers: rasters[i],
-	            transparent: true
-            }
-        ).addTo(map);
-	    wmsLayer.setOpacity(0.4);
-	}*/
+    control_layers = L.control.layers(baseMaps,overlays);
+    control_layers.addTo(map);
+    //L.control.layers(baseMaps).addTo(map);
 });

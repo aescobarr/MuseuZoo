@@ -72,10 +72,11 @@ def cross_files_and_save_result(self, operation_id):
     operation.save()
     file_operator_id = operation.file_operator.id
     rasters = operation.raster_operator.all()
-    raster_id = -1
+    rs_ids = []
     for raster in rasters:
-        raster_id = raster.id
-    query = """ select st_value(r.raster,subquery.location), subquery.coord_x, subquery.coord_y
+        rs_ids.append(str(raster.id))
+    rs_id_list = ",".join(rs_ids)
+    query = """ select r.name as raster_name, st_value(r.raster,subquery.location), subquery.coord_x, subquery.coord_y
                 from
                 visor_geoserverraster r,
                 (
@@ -88,10 +89,11 @@ def cross_files_and_save_result(self, operation_id):
                     where d.id={0}
                 ) as subquery
                 where
-                r.id={1} AND
-                ST_INTERSECTS(subquery.location,r.raster)
+                r.id IN ({1}) AND
+                ST_INTERSECTS(subquery.location,r.raster) order by 1
     """
-    loaded_query = query.format(file_operator_id, raster_id)
+    loaded_query = query.format(file_operator_id, rs_id_list)
+    print loaded_query
     if not os.path.exists(os.path.dirname(conf.LOCAL_RESULTS_ROOT + "/")):
         print conf.LOCAL_RESULTS_ROOT + " does not exist, creating"
         try:
@@ -107,7 +109,7 @@ def cross_files_and_save_result(self, operation_id):
         result = cursor.fetchall()
         with open( conf.LOCAL_RESULTS_ROOT + "/" + str(operation_id) + ".csv", "wb") as f:
             writer = csv.writer(f, delimiter=';')
-            writer.writerow(["value", "coord_x", "coord_y"])
+            writer.writerow(["raster_name", "value", "coord_x", "coord_y"])
             writer.writerows(result)
     operation.result_path = conf.LOCAL_RESULTS_ROOT_DIRECTORY + "/" + str(operation_id) + ".csv"
     operation.save()

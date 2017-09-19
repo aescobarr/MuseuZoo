@@ -285,9 +285,10 @@ class OperationViewSet(viewsets.ModelViewSet):
             instance = self.get_object()
             file_name = instance.result_path
             self.perform_destroy(instance)
-            # delete local file
-            file = os.path.join(museuzoo.settings.MEDIA_ROOT, file_name)
-            os.remove(file)
+            if file_name is not None:
+                # delete local file
+                file = os.path.join(museuzoo.settings.MEDIA_ROOT, file_name)
+                os.remove(file)
         except Http404:
             pass
         return Response(status=status.HTTP_204_NO_CONTENT)

@@ -21,11 +21,14 @@
 <link href="{% static 'leaflet/dist/leaflet.css' %}" rel="stylesheet">
 <link href="{% static 'sidebar-v2/css/leaflet-sidebar.min.css' %}" rel="stylesheet">
 <link href="{% static 'jquery-ui/themes/base/jquery-ui.min.css' %}" rel="stylesheet">
+<link href="{% static 'jquery-tagit/css/jquery.tagit.css' %}" rel="stylesheet">
 <style>
     #map { height: 400px; }
     #geotiff_list_container { float:left; width: 50%; padding: 20px;}
     #datafile_list_container { float:left; width: 50%; padding: 20px;}
     #result_window { padding: 20px; }
+    .hidden-raster-id-value { display:none; }
+    .hidden-datafile-id-value { display:none; }
 </style>
 {% endblock %}
 
@@ -77,6 +80,16 @@
     </div>-->
     <div id="result_window" class="row">
         <div class="col-lg-3">
+            <span>Rasters seleccionats:</span>
+            <ul class="tagit ui-widget ui-widget-content ui-corner-all selected-rasters">
+            </ul>
+        </div>
+        <div class="col-lg-3">
+            <span>Fitxer de dades:</span>
+            <ul class="tagit ui-widget ui-widget-content ui-corner-all selected-datafiles">
+            </ul>
+        </div>
+        <div class="col-lg-3">
             <button id="creua" type="button" class="btn btn-success">Creua raster(s) i fitxer de dades</button>
         </div>
         <div id="link_op" class="col-lg-2">
@@ -84,7 +97,7 @@
         </div>
     </div>
     <div class="row">
-        <div class="col-lg-6">
+        <!--<div class="col-lg-6">
             {% tag_cloud_for_model visor.GeoServerRaster as raster_tags %}
             {% for tag in raster_tags %}
                 <span class="label label-default" style="background-color: orange;">{{ tag }}</span>
@@ -95,7 +108,7 @@
             {% for file in datafile_tags %}
                 <span class="label label-default" style="background-color: orange;">{{ file }}</span>
             {% endfor %}
-        </div>
+        </div>-->
     </div>
     <div class="row">
         <!--<div>-->
@@ -118,6 +131,9 @@
         var satellite;
         var terrain;
         var hybrid;
+        var geoJsonLayer;
+        var wmsLayers = {};
+        var control_layers;
     </script>
     <script src="{% static 'leaflet/dist/leaflet.js' %}" ></script>
     <script src="{% static 'underscore/underscore-min.js' %}" ></script>
@@ -131,8 +147,6 @@
 
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAmGF2iEuPZt4fCJqxgHLZ8WMtQ7wM0Sp4" async defer></script>
     <script src="{% static 'visor/javascript/Leaflet.GridLayer.GoogleMutant/Leaflet.GoogleMutant.js' %}" ></script>
-    <script src="{% static 'visor/javascript/visor.js' %}" ></script>
-    <script src="{% static 'visor/javascript/visor_extra.js' %}" ></script>
     <script src="{% static 'sidebar-v2/js/jquery-sidebar.min.js' %}" ></script>
     <script src="{% static 'jquery-ui/jquery-ui.min.js' %}"></script>
     <script src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
@@ -141,4 +155,6 @@
     <script src="{% static 'visor/javascript/csrf_utils.js'%}"></script>
     <script src="{% static 'visor/javascript/geotiff_compact_list.js'%}"></script>
     <script src="{% static 'visor/javascript/datafile_compact_list.js'%}"></script>
+    <script src="{% static 'visor/javascript/visor.js' %}" ></script>
+    <script src="{% static 'visor/javascript/visor_extra.js' %}" ></script>
 {% endblock %}

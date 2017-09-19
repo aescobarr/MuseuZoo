@@ -1,5 +1,4 @@
 $(document).ready(function() {
-    var geoJsonLayer;
     var table = $('#datafile_list').DataTable( {
         "ajax": {
             "url": _datafile_list_url,
@@ -16,6 +15,7 @@ $(document).ready(function() {
         "columns": [
             { "data": "name" }
             ,{ "data": "tags" }
+            ,{ "data": "button_add_datafile" }
         ],
         "columnDefs": [
             {
@@ -24,8 +24,24 @@ $(document).ready(function() {
             },
             {
                 "targets":1,
-                "title": "Tags"
-            }
+                "title": "Tags",
+                "render": function(value){
+                    var retVal = "";
+                    if(value){
+                        var tags = value.split(',');
+                        for(var i = 0; i < tags.length; i++){
+                            retVal += '<span class="label label-warning">' + tags[i] + '</span><br>';
+                        }
+                    }
+                    return retVal;
+                }
+            },
+            {
+                "targets": -1,
+                "data": null,
+                "defaultContent": "<button class=\"button_add_datafile btn btn-success\">Tria fitxer</button>",
+                "sortable": false
+            },
         ],
         "select": {
             "style":    'single',
@@ -33,7 +49,7 @@ $(document).ready(function() {
         }
     } );
 
-    table.on( 'select', function ( e, dt, type, indexes ) {
+    /*table.on( 'select', function ( e, dt, type, indexes ) {
         if ( type === 'row' ) {
             var data = table.rows( indexes ).data();
             json = JSON.parse(data[0].geometry_geojson);
@@ -50,6 +66,6 @@ $(document).ready(function() {
                 }
             }
         );
-    });
+    });*/
 
 } );

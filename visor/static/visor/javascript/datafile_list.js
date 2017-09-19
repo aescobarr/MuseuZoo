@@ -109,7 +109,17 @@ $(document).ready(function() {
             },
             {
                 "targets":6,
-                "title": "Tags"
+                "title": "Tags",
+                "render": function(value){
+                    var retVal = "";
+                    if(value){
+                        var tags = value.split(',');
+                        for(var i = 0; i < tags.length; i++){
+                            retVal += '<span class="label label-warning">' + tags[i] + '</span><br>';
+                        }
+                    }
+                    return retVal;
+                }
             },
             {
                 "targets": -2,

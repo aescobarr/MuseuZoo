@@ -46,21 +46,33 @@ $(document).ready(function() {
         //"responsive": true,
         "columns": [
             { "data": "name" }
-            //,{ "data": "srs_code" }
             ,{ "data": "tags" }
+            ,{ "data": "button_add_raster" }
         ],
         "columnDefs": [
             {
                 "targets":0,
                 "title": "Name"
             },
-            /*{
-                "targets":1,
-                "title": "SRS"
-            },*/
             {
                 "targets":1,
-                "title": "Tags"
+                "title": "Tags",
+                "render": function(value){
+                    var retVal = "";
+                    if(value){
+                        var tags = value.split(',');
+                        for(var i = 0; i < tags.length; i++){
+                            retVal += '<span class="label label-warning">' + tags[i] + '</span><br>';
+                        }
+                    }
+                    return retVal;
+                }
+            },
+            {
+                "targets": -1,
+                "data": null,
+                "defaultContent": "<button class=\"button_add_raster btn btn-success\">Afegir a seleccionats</button>",
+                "sortable": false
             },
 
         ],
@@ -70,34 +82,5 @@ $(document).ready(function() {
         }
     } );
 
-    table.on( 'select', function ( e, dt, type, indexes ) {
-        if ( type === 'row' ) {
-            //var data = table.rows( indexes ).data().pluck( 'id' );
-            var data = table.rows( indexes ).data();
-            //alert(data[0]);
-            if(data && data[0]){
-                var pre_layer = data[0].full_geoserver_layer_name;
-                var wmsLayer = L.tileLayer.wms(
-                    wms_url,
-                    {
-                        layers: pre_layer,
-                        transparent: true
-                    }
-                );
-                wmsLayer.addTo(map);
-                wmsLayer.setOpacity(0.4);
-                }
-            }
-    } );
-
-    table.on( 'deselect', function ( e, dt, type, indexes ) {
-        map.eachLayer(
-            function(layer){
-                if(layer != osm && layer != roads && layer != satellite && layer != terrain && layer != hybrid ){
-                    map.removeLayer(layer);
-                }
-            }
-        );
-    });
 
 } );

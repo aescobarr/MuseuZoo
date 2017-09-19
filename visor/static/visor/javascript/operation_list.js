@@ -71,7 +71,7 @@ $(document).ready(function() {
                         var output = new Array();
                         output.push('<ul>');
                         for(var i = 0; i < data.length; i++){
-                            bit = data[0];
+                            bit = data[i];
                             output.push('<li><a href="' + bit.file + '">' + bit.name + '</a></li>');
                         }
                         output.push('</ul>');
