@@ -26,7 +26,7 @@
     #map { height: 400px; }
     #geotiff_list_container { float:left; width: 50%; padding: 20px;}
     #datafile_list_container { float:left; width: 50%; padding: 20px;}
-    #result_window { padding: 20px; }
+    .result_window { padding: 20px; }
     .hidden-raster-id-value { display:none; }
     .hidden-datafile-id-value { display:none; }
     table.dataTable tr.odd { background-color: #E2E4FF; }
@@ -35,53 +35,15 @@
 {% endblock %}
 
 {% block body %}
-<div class="container">
-    <section>
-        <div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        </div><!-- /.modal -->
-    </section>
+<div class="container result_window">
     <div class="row">
         <div class="col-lg-12">
             <div id="map"></div>
         </div>
     </div>
 
-    <!--<div id="sidebar" class="sidebar collapsed">
-        <div class="sidebar-tabs">
-            <ul role="tablist">
-                <li><a href="#home" role="tab"><i class="fa fa-bars"></i></a></li>
-                <li><a href="#profile" role="tab"><i class="fa fa-user"></i></a></li>
-                <li class="disabled"><a href="#messages" role="tab"><i class="fa fa-envelope"></i></a></li>
-                <li><a href="https://github.com/Turbo87/sidebar-v2" role="tab" target="_blank"><i class="fa fa-github"></i></a></li>
-            </ul>
-
-            <ul role="tablist">
-                <li><a href="#settings" role="tab"><i class="fa fa-gear"></i></a></li>
-            </ul>
-        </div>
-        <div class="sidebar-content">
-            <div class="sidebar-pane" id="home">
-                <h1 class="sidebar-header">
-                    sidebar-v2
-                    <span class="sidebar-close"><i class="fa fa-caret-left"></i></span>
-                </h1>
-            </div>
-
-            <div class="sidebar-pane" id="profile">
-                <h1 class="sidebar-header">Profile<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
-            </div>
-
-            <div class="sidebar-pane" id="messages">
-                <h1 class="sidebar-header">Messages<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
-            </div>
-
-            <div class="sidebar-pane" id="settings">
-                <h1 class="sidebar-header">Settings<span class="sidebar-close"><i class="fa fa-caret-left"></i></span></h1>
-            </div>
-        </div>
-    </div>-->
     <hr/>
-    <div id="result_window" class="row">
+    <div class="row result_window">
         <div class="col-lg-3">
             <span>Rasters seleccionats:</span>
             <ul class="tagit ui-widget ui-widget-content ui-corner-all selected-rasters">
