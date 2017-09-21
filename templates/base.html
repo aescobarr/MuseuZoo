@@ -17,9 +17,20 @@
     {% block basic_css %}
     <!-- Bootstrap Core CSS -->
     <link href="{% static 'bootstrap/dist/css/bootstrap.min.css' %}" rel="stylesheet">
+    <style>
+        * {
+            font-size: 12px;
+            line-height: 1;
+        }
+
+        .btn {
+            font-size: 12px;
+        }
+    </style>
     <!-- Custom CSS -->
     <link href="{% static 'museuzoo/css/logo-nav.css' %}" rel="stylesheet">
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="{% static 'toastr/toastr.min.css' %}" rel="stylesheet">
     {% endblock %}
     {% block extra_css %}
     {% endblock %}
@@ -72,6 +83,9 @@
                     <li id="page_list_operation">
                         <a href="{% url 'operation_list' %}">Llistar operacions</a>
                     </li>
+                    <li id="rasterlist_list_operation">
+                        <a href="{% url 'rasterlist_list' %}">Llistes de favorits</a>
+                    </li>
                     <li>
                         {% if user.is_authenticated %}
                         <a href="{% url 'logout' %}">Logout</a>
@@ -96,6 +110,8 @@
     <script src="{% static 'jquery/dist/jquery.min.js' %}"></script>
     <!-- Bootstrap Core JavaScript -->
     <script src="{% static 'bootstrap/dist/js/bootstrap.min.js' %}"></script>
+    <script src="{% static 'toastr/toastr.min.js' %}"></script>
+    <script src="{% static 'visor/javascript/toastr_options.js' %}"></script>
     <script>
         <!-- This selects the current active page -->
         $('a[href="' + this.location.pathname + '"]').parents('li,ul').addClass('active');

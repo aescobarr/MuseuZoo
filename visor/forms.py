@@ -1,5 +1,5 @@
 from django.forms import ModelForm
-from visor.models import WmsLayer, GeoServerRaster, DataFile, FILE_TYPES
+from visor.models import WmsLayer, GeoServerRaster, DataFile, FILE_TYPES, RasterList
 from django import forms
 import museuzoo.settings as conf
 from visor.helpers import check_file_already_uploaded, check_file_has_coords, check_file_has_semicolon_separator
@@ -16,6 +16,13 @@ class GeoServerRasterUpdateForm(ModelForm):
         model = GeoServerRaster
         fields = ['name', 'tags']
         widgets = {'name': forms.TextInput, 'tags': forms.HiddenInput}
+
+
+class RasterListUpdateForm(ModelForm):
+    class Meta:
+        model = RasterList
+        fields = ['name', 'rasters']
+        widgets = {'rasters': forms.HiddenInput}
 
 
 class GeoServerRasterForm(ModelForm):

@@ -7,10 +7,8 @@ $(document).ready(function() {
                 width: 'auto', resizable: false,
                 buttons: {
                     Yes: function () {
-                        delete_datafile(id);
+                        delete_operation(id);
                         $(this).dialog("close");
-                        //table.ajax.reload();
-                        //$('#geotiff_list').DataTable().ajax.reload();
                     },
                     No: function () {
                         $(this).dialog("close");
@@ -21,9 +19,9 @@ $(document).ready(function() {
                 }
         });
     };
-    var delete_datafile = function(id){
+    var delete_operation = function(id){
         $.ajax({
-            url: _datafile_delete_url + id,
+            url: _rasterlist_delete_url + id,
             method: "DELETE",
             beforeSend: function(xhr, settings) {
                 if (!csrfSafeMethod(settings.type)) {
@@ -40,9 +38,9 @@ $(document).ready(function() {
             }
         });
     };
-    var table = $('#datafile_list').DataTable( {
+    var table = $('#rasterlist_list').DataTable( {
         "ajax": {
-            "url": _datafile_list_url,
+            "url": _rasterlist_list_url,
             "dataType": 'json',
             "contentType": "application/json; charset=utf-8",
             "dataSrc": function (json) {
@@ -55,70 +53,35 @@ $(document).ready(function() {
         //"responsive": true,
         "columns": [
             { "data": "name" }
-            ,{ "data": "file" }
-            ,{ "data": "uploaded_by" }
-            ,{ "data": "date_uploaded" }
-            ,{ "data": "date_modified" }
-            ,{ "data": "file_type" }
-            ,{ "data": "tags" }
+            ,{ "data": "owner" }
+            ,{ "data": "rasters" }
             ,{ "data": "button_delete" }
             ,{ "data": "button_edit" }
         ],
         "columnDefs": [
             {
                 "targets":0,
-                "title": "Name"
+                "title": "Nom"
             },
             {
                 "targets":1,
-                "title": "File",
-                "render": function(data, type, row, meta){
-                    if(type === 'display'){
-                        data = '<a href="' + data + '">' + data + '</a>';
-                    }
-                    return data;
-                }
+                "title": "Propietari"
             },
             {
                 "targets":2,
-                "title": "Uploaded by"
-            },
-            {
-                "targets":3,
-                "title": "Date Uploaded",
-                "type": "date",
-                "render": function(value){
-                    var date = new Date(value);
-                    var month = date.getMonth() + 1;
-                    return date.getDate() + "/" + (month.length > 1 ? month : "0" + month) + "/" + date.getFullYear() + " - " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
-                }
-            },
-            {
-                "targets":4,
-                "title": "Date Modified",
-                "type": "date",
-                "render": function(value){
-                    var date = new Date(value);
-                    var month = date.getMonth() + 1;
-                    return date.getDate() + "/" + (month.length > 1 ? month : "0" + month) + "/" + date.getFullYear() + " - " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
-                }
-            },
-            {
-                "targets":5,
-                "title": "File Type"
-            },
-            {
-                "targets":6,
-                "title": "Tags",
-                "render": function(value){
-                    var retVal = "";
-                    if(value){
-                        var tags = value.split(',');
-                        for(var i = 0; i < tags.length; i++){
-                            retVal += '<span class="label label-warning">' + tags[i] + '</span><br>';
+                "title": "Rasters",
+                "render": function(data, type, row, meta){
+                    if(type === 'display'){
+                        var output = new Array();
+                        output.push('<ul>');
+                        for(var i = 0; i < data.length; i++){
+                            bit = data[i];
+                            output.push('<li><a href="' + bit.file + '">' + bit.name + '</a></li>');
                         }
+                        output.push('</ul>');
+                        data = output.join('');
                     }
-                    return retVal;
+                    return data;
                 }
             },
             {
@@ -135,18 +98,18 @@ $(document).ready(function() {
             },
         ]
     } );
-    $('#datafile_list tbody').on('click', 'td button.delete_button', function () {
+    $('#rasterlist_list tbody').on('click', 'td button.delete_button', function () {
         var tr = $(this).closest('tr');
         var row = table.row( tr );
         var id = row.data().id
-        //alert(id);
         confirmDialog("Segur que vols esborrar?",id);
     });
-    $('#datafile_list tbody').on('click', 'td button.edit_button', function () {
+    $('#rasterlist_list tbody').on('click', 'td button.edit_button', function () {
         var tr = $(this).closest('tr');
         var row = table.row( tr );
         var id = row.data().id
-        window.location.href = _datafile_update_url + id;
+        url = "/rasterlist/update/" + id
+        window.location.href = url;
+        //confirmDialog("Segur que vols esborrar?",id);
     });
-
 } );

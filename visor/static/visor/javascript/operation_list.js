@@ -31,11 +31,11 @@ $(document).ready(function() {
                 }
             },
             success: function( data, textStatus, jqXHR ) {
-                 alert("Esborrat amb èxit!");
+                 toastr.success("Esborrat amb èxit!");
                  table.ajax.reload();
             },
             error: function(jqXHR, textStatus, errorThrown){
-                alert("Error esborrant");
+                toastr.error("Error esborrant");
             }
         });
     };
@@ -143,7 +143,6 @@ $(document).ready(function() {
         var tr = $(this).closest('tr');
         var row = table.row( tr );
         var id = row.data().id
-        //alert(id);
         confirmDialog("Segur que vols esborrar?",id);
     });
 
@@ -153,7 +152,6 @@ $(document).ready(function() {
         var id = row.data().id
         url = "/operation/" + id
         window.open(url,'_blank');
-        //alert(id);
         //confirmDialog("Segur que vols esborrar?",id);
     });
 

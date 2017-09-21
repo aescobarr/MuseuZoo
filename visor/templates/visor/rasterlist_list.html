@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load staticfiles %}
+
+{% block title %}Llistes de favorits{% endblock %}
+
+{% block extrahead %}
+<script>
+    var _rasterlist_delete_url = "{% url 'rasterlists-list' %}";
+    var _rasterlist_list_url = "{% url 'rasterlists-list' %}";
+</script>
+{% endblock %}
+
+{% block extra_css %}
+    <link href="//cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css" rel="stylesheet">
+    <link href="{% static 'jquery-ui/themes/base/jquery-ui.min.css' %}" rel="stylesheet">
+    <link href="{% static 'datatables.net-responsive-dt/css/responsive.dataTables.min.css' %}" rel="stylesheet">
+    <style>
+        .add_button {
+            padding: 15px;
+        }
+        table.dataTable tr.odd { background-color: #E2E4FF; }
+        table.dataTable tr.even { background-color: white; }
+    </style>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <table id="rasterlist_list"></table>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'jquery-ui/jquery-ui.min.js' %}"></script>
+    <script src="//cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+    <script src="{% static 'datatables.net-responsive/js/dataTables.responsive.min.js' %}"></script>
+    <script src="{% static 'visor/javascript/csrf_utils.js'%}"></script>
+    <script src="{% static 'visor/javascript/rasterlist_list.js'%}"></script>
+{% endblock %}

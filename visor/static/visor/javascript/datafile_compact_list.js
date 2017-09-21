@@ -39,7 +39,7 @@ $(document).ready(function() {
             {
                 "targets": -1,
                 "data": null,
-                "defaultContent": "<button class=\"button_add_datafile btn btn-success\">Tria fitxer</button>",
+                "defaultContent": "<button class=\"button_add_datafile btn btn-success\"><span class=\"fa fa-plus\"></span></button>",
                 "sortable": false
             },
         ],

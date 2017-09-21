@@ -4,25 +4,23 @@ from django.shortcuts import render, get_object_or_404
 from django.views.generic import UpdateView, ListView
 from django.http import HttpResponse, HttpResponseRedirect
 from django.template.loader import render_to_string
-from visor.models import WmsLayer,GeoServerRaster, DataFile, Operation
+from visor.models import WmsLayer,GeoServerRaster, DataFile, Operation, RasterList
 from rest_framework.exceptions import ParseError
 from rest_framework.response import Response
-from serializers import WmsLayerSerializer, GeoTiffSerializer, TagSerializer, DataFileSerializer, OperationSerializer, OperationDetailSerializer
+import serializers
 from owslib.wms import WebMapService
 from django.middleware.csrf import get_token
 from django.core.urlresolvers import reverse
 from tagging.models import Tag
 from django.http import Http404
 import os
-from visor.forms import GeoServerRasterForm, GeoServerRasterUpdateForm, DataFileForm, DataFileUpdateForm
+from visor.forms import GeoServerRasterForm, GeoServerRasterUpdateForm, DataFileForm, DataFileUpdateForm, RasterListUpdateForm
 import museuzoo.settings
 from visor.helpers import delete_geoserver_store
 from django import forms
 from django.contrib.auth.decorators import login_required
-from visor.helpers import get_coverage_srs
 from tasks import process_file_geoserver, process_datafile, cross_files_and_save_result
 import museuzoo.settings as conf
-from django.contrib.gis.gdal import GDALRaster
 from rest_framework.settings import api_settings
 from djcelery.models import TaskMeta
 
@@ -73,6 +71,16 @@ def geotiff_update(request, id=None):
         return HttpResponseRedirect(reverse('geotiff_list'))
     return render(request, 'visor/geotiff_update.html', {'form': form, 'raster_id' : id})
 
+def rasterlist_update(request, id=None):
+    if id:
+        rasterlist = get_object_or_404(RasterList,pk=id)
+    else:
+        raise forms.ValidationError("No existeix aquesta llista")
+    form = RasterListUpdateForm(request.POST or None, instance=rasterlist)
+    if request.POST and form.is_valid():
+        form.save()
+        return HttpResponseRedirect(reverse('rasterlist_list'))
+    return render(request, 'visor/rasterlist_update.html', {'form': form, 'id' : id})
 
 @login_required
 def geotiff_create(request):
@@ -118,6 +126,10 @@ def index(request):
     context = {'wmslayer_list': layers, 'raster_list': rasters, 'wms_url': wms_url, 'files_list': files}
     return render(request, 'visor/index.html', context)
 
+
+@login_required
+def rasterlist_list(request):
+    return render(request, 'visor/rasterlist_list.html')
 
 @login_required
 def geotiff_list(request):
@@ -168,12 +180,14 @@ def layerloader_api(request):
             raise ParseError(detail=e.message)
 
 
+
 class WmsLayerListView(ListView):
     model = WmsLayer
     template_name = 'visor/wmslayer_list.html'
 
     def get_queryset(self):
         return WmsLayer.objects.all()
+
 
 
 class WmsLayerUpdateView(UpdateView):
@@ -191,13 +205,15 @@ class WmsLayerUpdateView(UpdateView):
         return HttpResponse(render_to_string('/visor/wmslayer_edit_form_success.html', {'wmslayer': wmslayer}))
 
 
+
 class WmsLayerViewSet(viewsets.ModelViewSet):
     queryset = WmsLayer.objects.all()
-    serializer_class = WmsLayerSerializer
+    serializer_class = serializers.WmsLayerSerializer
+
 
 
 class DataFileViewSet(viewsets.ModelViewSet):
-    serializer_class = DataFileSerializer
+    serializer_class = serializers.DataFileSerializer
 
     def get_queryset(self):
         queryset = DataFile.objects.all()
@@ -217,10 +233,13 @@ class DataFileViewSet(viewsets.ModelViewSet):
 
 
 class GeotiffViewSet(viewsets.ModelViewSet):
-    serializer_class = GeoTiffSerializer
+    serializer_class = serializers.GeoTiffSerializer
 
     def get_queryset(self):
         queryset = GeoServerRaster.objects.all()
+        term = self.request.query_params.get('term', None)
+        if term is not None:
+            queryset = queryset.filter(name__icontains=term)
         return queryset
 
     def destroy(self, request, *args, **kwargs):
@@ -238,7 +257,34 @@ class GeotiffViewSet(viewsets.ModelViewSet):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
+class RasterListViewSet(viewsets.ModelViewSet):
+    serializer_class = serializers.RasterListSerializer
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return serializers.RasterListDetailSerializer
+        return serializers.RasterListSerializer
+
+    def get_queryset(self):
+        queryset = RasterList.objects.all()
+        term = self.request.query_params.get('term', None)
+        if term is not None:
+            queryset = queryset.filter(name__icontains=term)
+        return queryset
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        list_name = serializer.validated_data['name']
+        if RasterList.objects.filter(name=list_name).exists():
+            return Response("Ja existeix una lista amb aquest nom", status=status.HTTP_400_BAD_REQUEST)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
+    serializer_class = serializers.TagSerializer
 
     def get_queryset(self):
         queryset = Tag.objects.all()
@@ -247,16 +293,14 @@ class TagViewSet(viewsets.ReadOnlyModelViewSet):
             queryset = queryset.filter(name__icontains=name)
         return queryset
 
-    serializer_class = TagSerializer
-
 
 class OperationViewSet(viewsets.ModelViewSet):
-    serializer_class = OperationSerializer
+    serializer_class = serializers.OperationSerializer
 
     def get_serializer_class(self):
         if self.action == 'list':
-            return OperationDetailSerializer
-        return OperationSerializer
+            return serializers.OperationDetailSerializer
+        return serializers.OperationSerializer
 
     def get_queryset(self):
         queryset = Operation.objects.all()

@@ -134,6 +134,7 @@ STATICFILES_FINDERS = [
     'djangobower.finders.BowerFinder',
 ]
 
+# ./manage.py bower install
 BOWER_INSTALLED_APPS = (
     'jquery',
     'jquery-ui',
@@ -151,10 +152,13 @@ BOWER_INSTALLED_APPS = (
     'datatables.net-select-dt',
     'fine-uploader',
     'jquery-tagit',
-    'file_resubmit',
+    'toastr',
 )
 
 REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.SessionAuthentication',
     ),

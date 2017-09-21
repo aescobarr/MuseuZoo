@@ -9,13 +9,14 @@
     var _geotiff_list_url = "{% url 'geotiffs-list' %}";
     var _datafile_list_url = "{% url 'datafiles-list' %}";
     var _operation_create_url = "{% url 'operations-list' %}";
+    var _list_create_url = "{% url 'rasterlists-list' %}";
+    var _list_list_url = "{% url 'rasterlists-list' %}";
     var _user_id = {{ request.user.id }};
 </script>
 {% endblock %}
 
 {% block extra_css %}
 <link href="//cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css" rel="stylesheet">
-<link href="{% static 'jquery-ui/themes/base/jquery-ui.min.css' %}" rel="stylesheet">
 <link href="{% static 'datatables.net-responsive-dt/css/responsive.dataTables.min.css' %}" rel="stylesheet">
 <link href="{% static 'datatables.net-select-dt/css/select.dataTables.min.css' %}" rel="stylesheet">
 <link href="{% static 'leaflet/dist/leaflet.css' %}" rel="stylesheet">
@@ -23,9 +24,7 @@
 <link href="{% static 'jquery-ui/themes/base/jquery-ui.min.css' %}" rel="stylesheet">
 <link href="{% static 'jquery-tagit/css/jquery.tagit.css' %}" rel="stylesheet">
 <style>
-    #map { height: 400px; }
-    #geotiff_list_container { float:left; width: 50%; padding: 20px;}
-    #datafile_list_container { float:left; width: 50%; padding: 20px;}
+    #map { height: 600px; }
     .result_window { padding: 20px; }
     .hidden-raster-id-value { display:none; }
     .hidden-datafile-id-value { display:none; }
@@ -35,56 +34,53 @@
 {% endblock %}
 
 {% block body %}
-<div class="container result_window">
+
+<div id="dialog-form" title="Desar llista de favorits">
+  <p class="validateTips">Es desaran els rasters seleccionats com a llista de favorits amb un nom.</p>
+
+  <form>
+    <fieldset>
+      <label for="name">Nom</label>
+      <input type="text" name="name" id="name" value="" class="text ui-widget-content ui-corner-all">
+      <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+    </fieldset>
+  </form>
+</div>
+
+<!--<div class="container result_window">-->
+<div class="result_window">
     <div class="row">
-        <div class="col-lg-12">
-            <div id="map"></div>
+        <div class="col-lg-4">
+            <label for="autoc_favorits">Carrega favorits:</label>
+            <input id="autoc_favorits">
         </div>
     </div>
-
-    <hr/>
     <div class="row result_window">
-        <div class="col-lg-3">
-            <span>Rasters seleccionats:</span>
-            <ul class="tagit ui-widget ui-widget-content ui-corner-all selected-rasters">
-            </ul>
+        <div class="col-lg-3" style="visibility:hidden;">
+            <span><strong>Rasters seleccionats:</strong></span>
+            <ul class="tagit ui-widget ui-widget-content ui-corner-all selected-rasters"></ul>
+            <button data-toggle="tooltip" title="Desa llista de rasters" id="desa-llista" type="button" class="btn btn-success"><span class="fa fa-heart"></span></button>
         </div>
-        <div class="col-lg-3">
-            <span>Fitxer de dades:</span>
+        <div class="col-lg-3" style="visibility:hidden;">
+            <span><strong>Fitxer de dades:</strong></span>
             <ul class="tagit ui-widget ui-widget-content ui-corner-all selected-datafiles">
             </ul>
-        </div>
-        <div class="col-lg-3">
-            <button id="creua" type="button" class="btn btn-success">Creua raster(s) i fitxer de dades</button>
-        </div>
-        <div id="link_op" class="col-lg-2">
-
+            <div class="row">
+                <div class="col-lg-6"><button id="creua" type="button" class="btn btn-success">Creua raster(s) i fitxer de dades</button></div>
+                <div id="link_op" class="col-lg-6"></div>
+            </div>
         </div>
     </div>
-    <hr/>
     <div class="row">
-        <!--<div class="col-lg-6">
-            {% tag_cloud_for_model visor.GeoServerRaster as raster_tags %}
-            {% for tag in raster_tags %}
-                <span class="label label-default" style="background-color: orange;">{{ tag }}</span>
-            {% endfor %}
+        <div id="geotiff_list_container" class="col-lg-3">
+            <table id="geotiff_list"></table>
+        </div>
+        <div id="datafile_list_container" class="col-lg-3">
+            <table id="datafile_list"></table>
         </div>
         <div class="col-lg-6">
-            {% tag_cloud_for_model visor.DataFile as datafile_tags %}
-            {% for file in datafile_tags %}
-                <span class="label label-default" style="background-color: orange;">{{ file }}</span>
-            {% endfor %}
-        </div>-->
-    </div>
-    <div class="row">
-        <!--<div>-->
-            <div id="geotiff_list_container">
-                <table id="geotiff_list"></table>
-            </div>
-            <div id="datafile_list_container">
-                <table id="datafile_list"></table>
-            </div>
-        <!--</div>-->
+            <div id="map"></div>
+        </div>
     </div>
 </div>
 {% endblock %}
@@ -100,6 +96,7 @@
         var geoJsonLayer;
         var wmsLayers = {};
         var control_layers;
+        var dialog, form;
     </script>
     <script src="{% static 'leaflet/dist/leaflet.js' %}" ></script>
     <script src="{% static 'underscore/underscore-min.js' %}" ></script>

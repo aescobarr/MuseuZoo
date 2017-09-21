@@ -80,6 +80,12 @@ class GeoServerRaster(models.Model):
         return self.geoserver_workspace + ":" + self.geoserver_layername
 
 
+class RasterList(models.Model):
+    name = models.CharField(max_length=255)
+    owner = models.ForeignKey(User, related_name="raster_lists")
+    rasters = models.ManyToManyField(GeoServerRaster)
+
+
 def validate_datafile_extension(value):
     ext = os.path.splitext(value.name)[1].lower()
     valid_extensions = ['.csv', '.zip']

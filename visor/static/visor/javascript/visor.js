@@ -9,9 +9,8 @@ $( document ).ready(function() {
     map = new L.Map('map',{
         layers: [osm]
     });
-	// start the map in South-East England
-	map.setView(new L.LatLng(40.58, -3.25),4);
-	//map.addLayer(osm);
+
+	map.setView(new L.LatLng(40.58, -3.25),2);
 
 	roads = L.gridLayer.googleMutant({
         type: 'roadmap' // valid values are 'roadmap', 'satellite', 'terrain' and 'hybrid'
@@ -41,5 +40,5 @@ $( document ).ready(function() {
 
     control_layers = L.control.layers(baseMaps,overlays);
     control_layers.addTo(map);
-    //L.control.layers(baseMaps).addTo(map);
+
 });

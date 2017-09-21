@@ -33,11 +33,13 @@ $(document).ready(function() {
                 }
             },
             success: function( data, textStatus, jqXHR ) {
-                 alert("Esborrat amb èxit!");
+                 //alert("Esborrat amb èxit!");
+                 toastr.success("Esborrat amb èxit!");
                  table.ajax.reload();
             },
             error: function(jqXHR, textStatus, errorThrown){
-                alert("Error esborrant");
+                //alert("Error esborrant");
+                toastr.error("Error esborrant");
             }
         });
     };

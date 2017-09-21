@@ -8,7 +8,8 @@ $(document).ready(function() {
         var count_files = get_selected_datafile_count();
 
         if ( count_rasters < 1 || count_files < 1){
-            alert("Cal triar com a mínim un ràster i un fitxer de dades");
+            //alert("Cal triar com a mínim un ràster i un fitxer de dades");
+            toastr.warning('Cal triar com a mínim un ràster i un fitxer de dades');
         }else{
             var operation = instantiate_op();
             create_op(operation);
@@ -70,7 +71,7 @@ $(document).ready(function() {
                  $("#link_op").html('<a href="/operation/' + data.id + '">Enllaç al resultat</a>');
             },
             error: function(jqXHR, textStatus, errorThrown){
-                alert("Error " + textStatus);
+                toastr.error("Error " + textStatus);
             }
         });
     };
@@ -89,6 +90,9 @@ $(document).ready(function() {
         //map.removeLayer(wmsLayers[raster_id]);
         control_layers.removeLayer(wmsLayers[raster_id]);
         map.removeLayer(wmsLayers[raster_id]);
+        if(get_selected_raster_count()==0){
+            $('.selected-rasters').parent().css('visibility','hidden');
+        }
     });
 
     $(document).on('click','a.close-datafile',function(){
@@ -98,6 +102,9 @@ $(document).ready(function() {
         li.remove();
         if(geoJsonLayer){
             map.removeLayer(geoJsonLayer);
+        }
+        if(get_selected_datafile_count()==0){
+            $('.selected-datafiles').parent().css('visibility','hidden');
         }
     });
 
@@ -115,6 +122,7 @@ $(document).ready(function() {
         if (_.contains(arr,id)){
             alert("Aquest raster ja està a la llista de seleccionats!");
         }else{
+            $('.selected-rasters').parent().css('visibility','visible');
             var new_template = raster_li_element_template.replace('###label',label);
             new_template = new_template.replace('###id',id);
             $('.selected-rasters').append(new_template);
@@ -146,6 +154,7 @@ $(document).ready(function() {
         if (_.contains(arr,id)){
             alert("Aquest fitxer de dades ja està a la llista de seleccionats!");
         }else{
+            $('.selected-datafiles').parent().css('visibility','visible');
             var new_template = datafile_li_element_template.replace('###label',label);
             new_template = new_template.replace('###id',id);
             $('.selected-datafiles').empty();
@@ -218,6 +227,106 @@ $(document).ready(function() {
         }
     });
 
+    var instantiate_list = function(){
+        var raster_ids = get_raster_ids();
+        var name = $('#name').val();
+        var list = {
+            rasters: raster_ids,
+            name: name,
+            owner: _user_id
+        };
+        return JSON.stringify(list);
+    };
+
+    var addList = function(){
+        var list = instantiate_list();
+        $.ajax({
+            url: _list_create_url,
+            method: "POST",
+            contentType: "application/json; charset=utf-8",
+            data: list,
+            beforeSend: function(xhr, settings) {
+                if (!csrfSafeMethod(settings.type)) {
+                    var csrftoken = getCookie('csrftoken');
+                    xhr.setRequestHeader("X-CSRFToken", csrftoken);
+                }
+            },
+            success: function( data, textStatus, jqXHR ) {
+                dialog.dialog( "close" );
+                toastr.success("Llista de favorits desada amb èxit!");
+            },
+            error: function(jqXHR, textStatus, errorThrown){
+                toastr.error("Error " + jqXHR.responseText);
+            }
+        });
+    };
+
+    dialog = $( "#dialog-form" ).dialog({
+      autoOpen: false,
+      height: 200,
+      width: 400,
+      modal: true,
+      buttons: {
+        "Desa la llista": addList,
+        Cancel: function() {
+          dialog.dialog( "close" );
+        }
+      },
+      close: function() {
+        form[ 0 ].reset();
+      }
+    });
+
+    form = dialog.find( "form" ).on( "submit", function( event ) {
+        event.preventDefault();
+        addList();
+    });
+
+    $( "#desa-llista" ).button().on( "click", function() {
+        dialog.dialog( "open" );
+    });
+
+    var put_favorites_on_map = function(raster_list){
+        for(var i = 0; i < raster_list.length; i++){
+            put_raster_on_map_and_selected_list(raster_list[i].id,raster_list[i].name,raster_list[i].full_geoserver_layer_name);
+        }
+    };
+
+    var put_raster_on_map_and_selected_list = function(raster_id,label,layer){
+        $('.selected-rasters').parent().css('visibility','visible');
+        var new_template = raster_li_element_template.replace('###label',label);
+        new_template = new_template.replace('###id',raster_id);
+        $('.selected-rasters').append(new_template);
+        var wmsLayer;
+        if (wmsLayers[raster_id.toString()]){
+            wmsLayer = wmsLayers[raster_id.toString()];
+        }else{
+            wmsLayer = L.tileLayer.wms(wms_url,{layers: layer,transparent: true});
+            //wmsLayer = L.tileLayer.betterWms(wms_url,{layers: layer,transparent: true});
+            wmsLayers[raster_id.toString()] = wmsLayer;
+        }
+        wmsLayer.setOpacity(0.4);
+        control_layers.addOverlay(wmsLayer,label);
+        wmsLayer.addTo(map);
+    }
+
+    $( "#autoc_favorits" ).autocomplete({
+        source: _list_list_url,
+        minLength: 2,
+        select: function( event, ui ) {
+            //log( "Selected: " + ui.item.value + " aka " + ui.item.id );
+            var listname = ui.item.name;
+            var list_id = ui.item.id;
+            //toastr.info(ui.item);
+            $('#autoc_favorits').val(listname);
+            put_favorites_on_map(ui.item.rasters);
+            return false;
+        }
+    }).autocomplete( "instance" )._renderItem = function( ul, item ) {
+        return $( "<li>" )
+            .append( "<div>" + item.name + "</div>" )
+            .appendTo( ul );
+    };
 
 
 } );

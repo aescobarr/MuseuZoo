@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from models import WmsLayer, GeoServerRaster, DataFile, SpatialRefSys, Operation
+from models import WmsLayer, GeoServerRaster, DataFile, SpatialRefSys, Operation, RasterList
 from django.contrib.auth.models import User
 from tagging.models import Tag
 
@@ -50,6 +50,22 @@ class OperationDetailSerializer(serializers.ModelSerializer):
     file_operator = DataFileSerializer(many=False)
     raster_operator = GeoTiffSerializer(many=True)
     performed_by = serializers.StringRelatedField(many=False)
+
     class Meta:
         model = Operation
         fields = ('id', 'raster_operator', 'file_operator', 'performed_on', 'performed_by', 'result_path', 'status')
+
+
+class RasterListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = RasterList
+        fields = ('id', 'name', 'owner', 'rasters')
+
+
+class RasterListDetailSerializer(serializers.ModelSerializer):
+    rasters = GeoTiffSerializer(many=True)
+    owner = serializers.StringRelatedField(many=False)
+
+    class Meta:
+        model = RasterList
+        fields = ('id', 'name', 'owner', 'rasters')
