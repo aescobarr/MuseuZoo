@@ -71,16 +71,20 @@ def geotiff_update(request, id=None):
         return HttpResponseRedirect(reverse('geotiff_list'))
     return render(request, 'visor/geotiff_update.html', {'form': form, 'raster_id' : id})
 
+
+@login_required
 def rasterlist_update(request, id=None):
     if id:
         rasterlist = get_object_or_404(RasterList,pk=id)
+        rasterlist_rasters = rasterlist.rasters.all()
     else:
         raise forms.ValidationError("No existeix aquesta llista")
     form = RasterListUpdateForm(request.POST or None, instance=rasterlist)
     if request.POST and form.is_valid():
         form.save()
         return HttpResponseRedirect(reverse('rasterlist_list'))
-    return render(request, 'visor/rasterlist_update.html', {'form': form, 'id' : id})
+    return render(request, 'visor/rasterlist_update.html', {'form': form, 'id' : id, 'rasters' : rasterlist_rasters})
+
 
 @login_required
 def geotiff_create(request):
@@ -266,7 +270,11 @@ class RasterListViewSet(viewsets.ModelViewSet):
         return serializers.RasterListSerializer
 
     def get_queryset(self):
-        queryset = RasterList.objects.all()
+        user_id = None
+        if self.request.user.is_authenticated():
+            user_id = self.request.user.id
+        if user_id:
+            queryset = RasterList.objects.filter(owner_id=user_id)
         term = self.request.query_params.get('term', None)
         if term is not None:
             queryset = queryset.filter(name__icontains=term)

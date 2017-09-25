@@ -22,7 +22,7 @@ class RasterListUpdateForm(ModelForm):
     class Meta:
         model = RasterList
         fields = ['name', 'rasters']
-        widgets = {'rasters': forms.HiddenInput}
+        widgets = {'rasters': forms.MultipleHiddenInput}
 
 
 class GeoServerRasterForm(ModelForm):

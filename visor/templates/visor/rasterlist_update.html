@@ -1,7 +1,7 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 
-{% block title %}Update DataFile{% endblock %}
+{% block title %}Editar llistes de favorits{% endblock %}
 
 {% block extra_css %}
     <style>
@@ -14,8 +14,6 @@
         }
         .ui-helper-hidden-accessible { display:none; }
     </style>
-    <link href="{% static 'jquery-tagit/css/jquery.tagit.css' %}" rel="stylesheet">
-    <link href="{% static 'jquery-tagit/css/tagit.ui-zendesk.css' %}" rel="stylesheet">
     <link href="{% static 'jquery-ui/themes/base/jquery-ui.min.css' %}" rel="stylesheet">
     <link href="{% static 'jquery-tagit/css/jquery.tagit.css' %}" rel="stylesheet">
     <style>
@@ -33,10 +31,16 @@
                 {{ form.as_table }}
                 <tr>
                     <th><label>Rasters:</label></th>
-                    <td><input id="rasters"></td>
+                    <td><input id="rasters_autocomplete"></td>
+                    <td><span data-toggle="tooltip" title="Escriu tres lletres del nom del ràster. Quan aparegui al desplegable, tria'l per afegir-lo a la llista de ràsters." class="fa fa-info-circle"></span></td>
                 </tr>
             </table>
-            <div><td><ul class="tagit ui-widget ui-widget-content ui-corner-all selected-rasters"></ul></td></div>
+            <div>
+                <td>
+                    <ul class="tagit ui-widget ui-widget-content ui-corner-all selected-rasters">
+                    </ul>
+                </td>
+            </div>
         </form>
     </div>
 {% endblock %}
@@ -49,8 +53,15 @@
             return this.addBack.apply(this, arguments);
         }
     </script>
+    <script>
+        var raster_table = [];
+        {% for raster in rasters %}
+            raster_table.push({ 'id':{{ raster.id }}, 'name': '{{ raster.name }}' });
+        {% endfor %}
+    </script>
     <script src="{% static 'jquery-tagit/js/tag-it.min.js' %}"></script>
     <script src="{% static 'visor/javascript/tags_list.js' %}"></script>
     <script src="{% static 'visor/javascript/taglist_build.js' %}"></script>
+    <script src="{% static 'underscore/underscore-min.js' %}" ></script>
     <script src="{% static 'visor/javascript/rasterlist_update.js' %}"></script>
 {% endblock %}

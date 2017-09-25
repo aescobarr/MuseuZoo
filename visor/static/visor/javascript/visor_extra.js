@@ -104,7 +104,7 @@ $(document).ready(function() {
             map.removeLayer(geoJsonLayer);
         }
         if(get_selected_datafile_count()==0){
-            $('.selected-datafiles').parent().css('visibility','hidden');
+            $('#selected-rasters-control').css('visibility','hidden');
         }
     });
 
@@ -293,7 +293,7 @@ $(document).ready(function() {
     };
 
     var put_raster_on_map_and_selected_list = function(raster_id,label,layer){
-        $('.selected-rasters').parent().css('visibility','visible');
+        $('#selected-rasters-control').css('visibility','visible');
         var new_template = raster_li_element_template.replace('###label',label);
         new_template = new_template.replace('###id',raster_id);
         $('.selected-rasters').append(new_template);

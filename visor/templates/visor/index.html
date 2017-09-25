@@ -35,31 +35,20 @@
 
 {% block body %}
 
-<div id="dialog-form" title="Desar llista de favorits">
-  <p class="validateTips">Es desaran els rasters seleccionats com a llista de favorits amb un nom.</p>
-
-  <form>
-    <fieldset>
-      <label for="name">Nom</label>
-      <input type="text" name="name" id="name" value="" class="text ui-widget-content ui-corner-all">
-      <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
-    </fieldset>
-  </form>
-</div>
-
 <!--<div class="container result_window">-->
 <div class="result_window">
     <div class="row">
         <div class="col-lg-4">
             <label for="autoc_favorits">Carrega favorits:</label>
             <input id="autoc_favorits">
+            <span data-toggle="tooltip" title="Escriu tres lletres de la llista de favorits que vols carregar i tria-la del desplegable." class="fa fa-info-circle"></span>
         </div>
     </div>
     <div class="row result_window">
-        <div class="col-lg-3" style="visibility:hidden;">
+        <div id="selected-rasters-control" class="col-lg-3" style="visibility:hidden;">
             <span><strong>Rasters seleccionats:</strong></span>
             <ul class="tagit ui-widget ui-widget-content ui-corner-all selected-rasters"></ul>
-            <button data-toggle="tooltip" title="Desa llista de rasters" id="desa-llista" type="button" class="btn btn-success"><span class="fa fa-heart"></span></button>
+            <button data-toggle="tooltip" title="Desa llista de rasters" id="desa-llista" type="button"><span class="fa fa-heart" aria-hidden="true"></span></button>
         </div>
         <div class="col-lg-3" style="visibility:hidden;">
             <span><strong>Fitxer de dades:</strong></span>
@@ -82,6 +71,17 @@
             <div id="map"></div>
         </div>
     </div>
+</div>
+<div id="dialog-form" title="Desar llista de favorits">
+  <p class="validateTips">Es desaran els rasters seleccionats com a llista de favorits amb un nom.</p>
+
+  <form>
+    <fieldset>
+      <label for="name">Nom</label>
+      <input type="text" name="name" id="name" value="" class="text ui-widget-content ui-corner-all">
+      <input type="submit" tabindex="-1" style="position:absolute; top:-1000px">
+    </fieldset>
+  </form>
 </div>
 {% endblock %}
 
