@@ -49,7 +49,6 @@ $(document).ready(function() {
             }
         },
         "language": opcions_llenguatge_catala,
-        "pageLength": 25,
         "bLengthChange": false,
         "stateSave": true,
         //"responsive": true,
