@@ -23,6 +23,7 @@ from tasks import process_file_geoserver, process_datafile, cross_files_and_save
 import museuzoo.settings as conf
 from rest_framework.settings import api_settings
 from djcelery.models import TaskMeta
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 @login_required
@@ -120,6 +121,21 @@ def operation_detail(request, id=None):
 def operation_list(request):
     return render(request, 'visor/operation_list.html')
 
+
+@login_required
+@api_view(['GET'])
+def datatable_operation_list(request):
+    if request.method == 'GET':
+        draw = request.query_params.get('draw',-1)
+        start = request.query_params.get('start',-1)
+        length = request.query_params.get('length', -1)
+        queryset = Operation.objects.all()
+        paginator = Paginator(queryset,length)
+        recordsTotal = queryset.count()
+        recordsFiltered = recordsTotal
+        page = int(start)/int(length) + 1
+        serializer = serializers.DataTableOperationSerializer(paginator.page(page),many=True)
+        return Response({'draw': draw, 'recordsTotal': recordsTotal, 'recordsFiltered': recordsFiltered, 'data':serializer.data})
 
 @login_required
 def index(request):
