@@ -20,6 +20,7 @@ $(document).ready(function() {
                 return json;
             }
         },
+        "language": opcions_llenguatge_catala,
         "pageLength": 25,
         "bLengthChange": false,
         "stateSave": true,
@@ -32,7 +33,7 @@ $(document).ready(function() {
         "columnDefs": [
             {
                 "targets":0,
-                "title": "Name"
+                "title": "Nom"
             },
             {
                 "targets":1,

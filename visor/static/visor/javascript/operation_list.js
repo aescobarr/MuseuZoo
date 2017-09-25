@@ -3,7 +3,7 @@ $(document).ready(function() {
         $('<div></div>').appendTo('body')
             .html('<div><h6>'+message+'</h6></div>')
             .dialog({
-                modal: true, title: 'Delete message', zIndex: 10000, autoOpen: true,
+                modal: true, title: 'Esborrant operacio...', zIndex: 10000, autoOpen: true,
                 width: 'auto', resizable: false,
                 buttons: {
                     Yes: function () {
@@ -48,6 +48,7 @@ $(document).ready(function() {
                 return json;
             }
         },
+        "language": opcions_llenguatge_catala,
         "pageLength": 25,
         "bLengthChange": false,
         "stateSave": true,

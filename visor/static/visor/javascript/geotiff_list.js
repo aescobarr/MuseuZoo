@@ -3,7 +3,7 @@ $(document).ready(function() {
         $('<div></div>').appendTo('body')
             .html('<div><h6>'+message+'</h6></div>')
             .dialog({
-                modal: true, title: 'Delete message', zIndex: 10000, autoOpen: true,
+                modal: true, title: 'Esborrant raster...', zIndex: 10000, autoOpen: true,
                 width: 'auto', resizable: false,
                 buttons: {
                     Yes: function () {
@@ -52,6 +52,7 @@ $(document).ready(function() {
                 return json;
             }
         },
+        "language": opcions_llenguatge_catala,
         "pageLength": 25,
         "bLengthChange": false,
         "stateSave": true,
@@ -70,11 +71,11 @@ $(document).ready(function() {
         "columnDefs": [
             {
                 "targets":0,
-                "title": "Name"
+                "title": "Nom"
             },
             {
                 "targets":1,
-                "title": "File",
+                "title": "Fitxer",
                 "render": function(data, type, row, meta){
                     if(type === 'display'){
                         data = '<a href="' + data + '">' + data + '</a>';
@@ -84,15 +85,15 @@ $(document).ready(function() {
             },
             {
                 "targets":2,
-                "title": "SRS"
+                "title": "Sistema referència"
             },
             {
                 "targets":3,
-                "title": "Uploaded by"
+                "title": "Propietari"
             },
             {
                 "targets":4,
-                "title": "Date Uploaded",
+                "title": "Data de càrrega",
                 "type": "date",
                 "render": function(value){
                     var date = new Date(value);
@@ -102,7 +103,7 @@ $(document).ready(function() {
             },
             {
                 "targets":5,
-                "title": "Date Modified",
+                "title": "Data darrera modificació",
                 "type": "date",
                 "render": function(value){
                     var date = new Date(value);
