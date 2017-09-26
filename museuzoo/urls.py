@@ -5,7 +5,7 @@ from visor import views
 from rest_framework import routers
 from fine_uploader.views import UploadView
 from fine_uploader.views import home
-from visor.views import geotiff_create, geotiff_list, geotiff_update, datafile_list, datafile_create, datafile_update, operation_detail, operation_json_detail, operation_list, rasterlist_list, rasterlist_update, datatable_operation_list, datatable_datafile_list, datatable_geotiff_list
+from visor.views import geotiff_create, geotiff_list, geotiff_update, datafile_list, datafile_create, datafile_update, operation_detail, operation_json_detail, operation_list, rasterlist_list, rasterlist_update, datatable_operation_list, datatable_datafile_list, datatable_geotiff_list, datatable_rasterlist_list
 from django.conf.urls.static import static
 from django.contrib.auth.views import login,logout
 
@@ -38,6 +38,7 @@ urlpatterns = [
     url(r'^datatableoperation/list$', datatable_operation_list, name='datatable_operation_list'),
     url(r'^datatabledatafile/list$', datatable_datafile_list, name='datatable_datafile_list'),
     url(r'^datatableraster/list$', datatable_geotiff_list, name='datatable_geotiff_list'),
+    url(r'^datatablerasterlist/list$', datatable_rasterlist_list, name='datatable_rasterlist_list'),
     url(r'^layer_list$', views.WmsLayerListView.as_view(), name='layer_list'),
     url(r'^upload(?:/(?P<qquuid>\S+))?', UploadView.as_view(), name='upload'),
     url(r'^upload_list$', UploadView.as_view(), name='upload'),

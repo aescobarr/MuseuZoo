@@ -43,6 +43,101 @@ $(document).ready(function() {
             }
         });
     };
+
+    var table = $('#geotiff_list').DataTable( {
+        "ajax": {
+            "url": _datatable_geotiff_list_url,
+            "dataType": 'json'
+        },
+        "serverSide": true,
+        "processing": true,
+        "language": opcions_llenguatge_catala,
+        "pageLength": 25,
+        "pagingType": "full_numbers",
+        "bLengthChange": false,
+        "columns": [
+            { "data": "name" }
+            ,{ "data": "file" }
+            ,{ "data": "srs_code" }
+            ,{ "data": "uploaded_by" }
+            ,{ "data": "date_uploaded" }
+            ,{ "data": "date_modified" }
+            ,{ "data": "tags" }
+            ,{ "data": "button_delete" }
+            ,{ "data": "button_edit" }
+        ],
+        "columnDefs": [
+            {
+                "targets":0,
+                "title": "Nom"
+            },
+            {
+                "targets":1,
+                "title": "Fitxer",
+                "render": function(data, type, row, meta){
+                    if(type === 'display'){
+                        data = '<a href="' + data + '">' + data + '</a>';
+                    }
+                    return data;
+                }
+            },
+            {
+                "targets":2,
+                "title": "Sistema referència"
+            },
+            {
+                "targets":3,
+                "title": "Propietari"
+            },
+            {
+                "targets":4,
+                "title": "Data de càrrega",
+                "type": "date",
+                "render": function(value){
+                    var date = new Date(value);
+                    var month = date.getMonth() + 1;
+                    return date.getDate() + "/" + (month.length > 1 ? month : "0" + month) + "/" + date.getFullYear() + " - " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+                }
+            },
+            {
+                "targets":5,
+                "title": "Data darrera modificació",
+                "type": "date",
+                "render": function(value){
+                    var date = new Date(value);
+                    var month = date.getMonth() + 1;
+                    return date.getDate() + "/" + (month.length > 1 ? month : "0" + month) + "/" + date.getFullYear() + " - " + date.getHours() + ":" + date.getMinutes() + ":" + date.getSeconds();
+                }
+            },
+            {
+                "targets":6,
+                "title": "Tags",
+                "render": function(value){
+                    var retVal = "";
+                    if(value){
+                        var tags = value.split(',');
+                        for(var i = 0; i < tags.length; i++){
+                            retVal += '<span class="label label-warning">' + tags[i] + '</span><br>';
+                        }
+                    }
+                    return retVal;
+                }
+            },
+            {
+                "targets": -2,
+                "data": null,
+                "defaultContent": "<button class=\"delete_button btn btn-danger\">Esborrar</button>",
+                "sortable": false
+            },
+            {
+                "targets": -1,
+                "data": null,
+                "defaultContent": "<button class=\"edit_button btn btn-info\">Editar</button>",
+                "sortable": false
+            },
+        ]
+    } );
+    /*
     var table = $('#geotiff_list').DataTable( {
         "ajax": {
             "url": _geotiff_list_url,
@@ -138,7 +233,7 @@ $(document).ready(function() {
                 "sortable": false
             },
         ]
-    } );
+    } );*/
     $('#geotiff_list tbody').on('click', 'td button.delete_button', function () {
         var tr = $(this).closest('tr');
         var row = table.row( tr );

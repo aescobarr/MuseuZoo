@@ -40,6 +40,65 @@ $(document).ready(function() {
     };
     var table = $('#rasterlist_list').DataTable( {
         "ajax": {
+            "url": _datatable_rasterlist_list_url,
+            "dataType": 'json'
+        },
+        "serverSide": true,
+        "processing": true,
+        "language": opcions_llenguatge_catala,
+        "pageLength": 25,
+        "pagingType": "full_numbers",
+        "bLengthChange": false,
+        "columns": [
+            { "data": "name" }
+            ,{ "data": "owner" }
+            ,{ "data": "rasters" }
+            ,{ "data": "button_delete" }
+            ,{ "data": "button_edit" }
+        ],
+        "columnDefs": [
+            {
+                "targets":0,
+                "title": "Nom"
+            },
+            {
+                "targets":1,
+                "title": "Propietari"
+            },
+            {
+                "targets":2,
+                "title": "Rasters",
+                "render": function(data, type, row, meta){
+                    if(type === 'display'){
+                        var output = new Array();
+                        output.push('<ul>');
+                        for(var i = 0; i < data.length; i++){
+                            bit = data[i];
+                            output.push('<li><a href="' + bit.file + '">' + bit.name + '</a></li>');
+                        }
+                        output.push('</ul>');
+                        data = output.join('');
+                    }
+                    return data;
+                }
+            },
+            {
+                "targets": -2,
+                "data": null,
+                "defaultContent": "<button class=\"delete_button btn btn-danger\">Esborrar</button>",
+                "sortable": false
+            },
+            {
+                "targets": -1,
+                "data": null,
+                "defaultContent": "<button class=\"edit_button btn btn-info\">Editar</button>",
+                "sortable": false
+            },
+        ]
+    } );
+    /*
+    var table = $('#rasterlist_list').DataTable( {
+        "ajax": {
             "url": _rasterlist_list_url,
             "dataType": 'json',
             "contentType": "application/json; charset=utf-8",
@@ -98,7 +157,7 @@ $(document).ready(function() {
                 "sortable": false
             },
         ]
-    } );
+    } );*/
     $('#rasterlist_list tbody').on('click', 'td button.delete_button', function () {
         var tr = $(this).closest('tr');
         var row = table.row( tr );

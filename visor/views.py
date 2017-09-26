@@ -198,7 +198,7 @@ def datatable_operation_list(request):
 @api_view(['GET'])
 def datatable_datafile_list(request):
     if request.method == 'GET':
-        search_field_list = ('name', 'tags')
+        search_field_list = ('name', 'tags', 'file', 'uploaded_by__username', 'date_uploaded', 'date_modified')
         response = generic_datatable_list_endpoint(request, search_field_list, DataFile,serializers.DataFileSerializer)
         return response
 
@@ -207,8 +207,17 @@ def datatable_datafile_list(request):
 @api_view(['GET'])
 def datatable_geotiff_list(request):
     if request.method == 'GET':
-        search_field_list = ('name', 'tags')
+        search_field_list = ('name', 'tags', 'file', 'uploaded_by__username', 'date_uploaded', 'date_modified')
         response = generic_datatable_list_endpoint(request, search_field_list, GeoServerRaster,serializers.GeoTiffSerializer)
+        return response
+
+
+@login_required
+@api_view(['GET'])
+def datatable_rasterlist_list(request):
+    if request.method == 'GET':
+        search_field_list = ('name', 'rasters__name')
+        response = generic_datatable_list_endpoint(request, search_field_list, RasterList,serializers.RasterListDetailSerializer)
         return response
 
 
