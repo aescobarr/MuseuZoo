@@ -7,6 +7,7 @@ from django.template.loader import render_to_string
 from visor.models import WmsLayer,GeoServerRaster, DataFile, Operation, RasterList
 from rest_framework.exceptions import ParseError
 from rest_framework.response import Response
+#import serializers
 import serializers
 from owslib.wms import WebMapService
 from django.middleware.csrf import get_token
@@ -128,57 +129,88 @@ def operation_list(request):
 
 def get_order_clause(params_dict, translation_dict=None):
     order_clause = []
-    order = params_dict['order']
-    if len(order) > 0:
-        for key in order:
-            sort_dict = order[key]
-            column_index_str = sort_dict['column']
-            column_name = params_dict['columns'][int(column_index_str)]['data']
-            direction = sort_dict['dir']
-            if direction != 'asc':
-                order_clause.append('-' + column_name)
-            else:
-                order_clause.append(column_name)
+    try:
+        order = params_dict['order']
+        if len(order) > 0:
+            for key in order:
+                sort_dict = order[key]
+                column_index_str = sort_dict['column']
+                column_name = params_dict['columns'][int(column_index_str)]['data']
+                direction = sort_dict['dir']
+                if direction != 'asc':
+                    order_clause.append('-' + column_name)
+                else:
+                    order_clause.append(column_name)
+    except KeyError:
+        pass
     return order_clause
 
 
 def get_filter_clause(params_dict, fields):
     filter_clause = []
-    q = params_dict['search']['value']
-    if q != '':
-        for field in fields:
-            filter_clause.append( Q(**{field+'__icontains':q}) )
+    try:
+        q = params_dict['search']['value']
+        if q != '':
+            for field in fields:
+                filter_clause.append( Q(**{field+'__icontains':q}) )
+    except KeyError:
+        pass
     return filter_clause
+
+
+def generic_datatable_list_endpoint(request,search_field_list,queryClass, classSerializer):
+    draw = request.query_params.get('draw', -1)
+    start = request.query_params.get('start', 0)
+    length = request.query_params.get('length', 10)
+
+    get_dict = parser.parse(request.GET.urlencode())
+
+    order_clause = get_order_clause(get_dict)
+
+    filter_clause = get_filter_clause(get_dict, search_field_list)
+
+    if len(filter_clause) == 0:
+        queryset = queryClass.objects.order_by(*order_clause)
+    else:
+        queryset = queryClass.objects.order_by(*order_clause).filter(reduce(operator.or_, filter_clause))
+
+    paginator = Paginator(queryset, length)
+
+    recordsTotal = queryset.count()
+    recordsFiltered = recordsTotal
+    page = int(start) / int(length) + 1
+
+    serializer = classSerializer(paginator.page(page), many=True)
+    return Response(
+        {'draw': draw, 'recordsTotal': recordsTotal, 'recordsFiltered': recordsFiltered, 'data': serializer.data})
 
 
 @login_required
 @api_view(['GET'])
 def datatable_operation_list(request):
     if request.method == 'GET':
+        search_field_list = ('file_operator__name', 'result_path', 'performed_by__username', 'raster_operator__name')
+        response = generic_datatable_list_endpoint(request, search_field_list, Operation, serializers.DataTableOperationSerializer)
+        return response
 
-        draw = request.query_params.get('draw',-1)
-        start = request.query_params.get('start',-1)
-        length = request.query_params.get('length', -1)
 
-        get_dict = parser.parse(request.GET.urlencode())
+@login_required
+@api_view(['GET'])
+def datatable_datafile_list(request):
+    if request.method == 'GET':
+        search_field_list = ('name', 'tags')
+        response = generic_datatable_list_endpoint(request, search_field_list, DataFile,serializers.DataFileSerializer)
+        return response
 
-        order_clause = get_order_clause(get_dict)
 
-        filter_clause = get_filter_clause(get_dict, ('file_operator__name','result_path', 'performed_by__username', 'raster_operator__name'))
+@login_required
+@api_view(['GET'])
+def datatable_geotiff_list(request):
+    if request.method == 'GET':
+        search_field_list = ('name', 'tags')
+        response = generic_datatable_list_endpoint(request, search_field_list, GeoServerRaster,serializers.GeoTiffSerializer)
+        return response
 
-        if len(filter_clause) == 0:
-            queryset = Operation.objects.order_by(*order_clause)
-        else:
-            queryset = Operation.objects.order_by(*order_clause).filter( reduce(operator.or_,filter_clause) )
-
-        paginator = Paginator(queryset,length)
-
-        recordsTotal = queryset.count()
-        recordsFiltered = recordsTotal
-        page = int(start)/int(length) + 1
-
-        serializer = serializers.DataTableOperationSerializer(paginator.page(page),many=True)
-        return Response({'draw': draw, 'recordsTotal': recordsTotal, 'recordsFiltered': recordsFiltered, 'data':serializer.data})
 
 @login_required
 def index(request):

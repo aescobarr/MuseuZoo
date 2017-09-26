@@ -42,7 +42,7 @@ $(document).ready(function() {
 
     var table = $('#operation_list').DataTable( {
         "ajax": {
-            "url": '/datatableoperation/list',
+            "url": _operation_datatable_list_url,
             "dataType": 'json'
         },
         "serverSide": true,

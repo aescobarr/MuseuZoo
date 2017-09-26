@@ -49,7 +49,7 @@ class OperationSerializer(serializers.ModelSerializer):
 class QuickDataFileSerializer(serializers.ModelSerializer):
     class Meta:
         model = DataFile
-        fields = ('id', 'name', 'file')
+        fields = ('id', 'name', 'tags', 'file')
 
 class QuickGeoTiffSerializer(serializers.ModelSerializer):
     class Meta:
