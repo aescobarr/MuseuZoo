@@ -24,6 +24,10 @@ import museuzoo.settings as conf
 from rest_framework.settings import api_settings
 from djcelery.models import TaskMeta
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+import json
+from querystring_parser import parser
+from django.db.models import Q
+import operator
 
 
 @login_required
@@ -122,18 +126,57 @@ def operation_list(request):
     return render(request, 'visor/operation_list.html')
 
 
+def get_order_clause(params_dict, translation_dict=None):
+    order_clause = []
+    order = params_dict['order']
+    if len(order) > 0:
+        for key in order:
+            sort_dict = order[key]
+            column_index_str = sort_dict['column']
+            column_name = params_dict['columns'][int(column_index_str)]['data']
+            direction = sort_dict['dir']
+            if direction != 'asc':
+                order_clause.append('-' + column_name)
+            else:
+                order_clause.append(column_name)
+    return order_clause
+
+
+def get_filter_clause(params_dict, fields):
+    filter_clause = []
+    q = params_dict['search']['value']
+    if q != '':
+        for field in fields:
+            filter_clause.append( Q(**{field+'__icontains':q}) )
+    return filter_clause
+
+
 @login_required
 @api_view(['GET'])
 def datatable_operation_list(request):
     if request.method == 'GET':
+
         draw = request.query_params.get('draw',-1)
         start = request.query_params.get('start',-1)
         length = request.query_params.get('length', -1)
-        queryset = Operation.objects.all()
+
+        get_dict = parser.parse(request.GET.urlencode())
+
+        order_clause = get_order_clause(get_dict)
+
+        filter_clause = get_filter_clause(get_dict, ('file_operator__name','result_path', 'performed_by__username', 'raster_operator__name'))
+
+        if len(filter_clause) == 0:
+            queryset = Operation.objects.order_by(*order_clause)
+        else:
+            queryset = Operation.objects.order_by(*order_clause).filter( reduce(operator.or_,filter_clause) )
+
         paginator = Paginator(queryset,length)
+
         recordsTotal = queryset.count()
         recordsFiltered = recordsTotal
         page = int(start)/int(length) + 1
+
         serializer = serializers.DataTableOperationSerializer(paginator.page(page),many=True)
         return Response({'draw': draw, 'recordsTotal': recordsTotal, 'recordsFiltered': recordsFiltered, 'data':serializer.data})
 
