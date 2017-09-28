@@ -235,6 +235,7 @@ def index(request):
 def rasterlist_list(request):
     return render(request, 'visor/rasterlist_list.html')
 
+
 @login_required
 def geotiff_list(request):
     return render(request, 'visor/geotiff_list.html')

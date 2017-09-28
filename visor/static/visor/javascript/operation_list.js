@@ -131,7 +131,7 @@ $(document).ready(function() {
             {
                 "targets": -2,
                 "data": null,
-                "defaultContent": "<button class=\"edit_button btn btn-info\">Detall operació</button>",
+                "defaultContent": "<button class=\"edit_button btn btn-info\">Detall creuament</button>",
                 "sortable": false
             }
         ]

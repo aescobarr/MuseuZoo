@@ -8,7 +8,6 @@ $(document).ready(function() {
         var count_files = get_selected_datafile_count();
 
         if ( count_rasters < 1 || count_files < 1){
-            //alert("Cal triar com a mínim un ràster i un fitxer de dades");
             toastr.warning('Cal triar com a mínim un ràster i un fitxer de dades');
         }else{
             var operation = instantiate_op();
@@ -104,7 +103,7 @@ $(document).ready(function() {
             map.removeLayer(geoJsonLayer);
         }
         if(get_selected_datafile_count()==0){
-            $('#selected-rasters-control').css('visibility','hidden');
+            $('#selected-datafile-control').css('visibility','hidden');
         }
     });
 

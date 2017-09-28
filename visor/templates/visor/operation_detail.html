@@ -1,7 +1,23 @@
 {% extends "base.html" %}
 {% load staticfiles %}
 
-{% block title %}Detall operacio{% endblock %}
+{% block title %}Detall creuament{% endblock %}
+
+{% block extra_css %}
+<style>
+    .operation_table {
+        width: 60%;
+    }
+
+    .status_table {
+        width: 60%;
+    }
+
+    table tbody tr th,td{
+        padding: 10px;
+    }
+</style>
+{% endblock %}
 
 {% block extrahead %}
 <script>
@@ -12,10 +28,10 @@
 
 {% block body %}
     <div class="container">
-        <h3>Detall operació</h3>
+        <h3>Detall creuament</h3>
         <table class="operation_table">
             <tr>
-                <th>Operació creada: </th>
+                <th>Creuament creat a: </th>
                 <td>{{ operation.performed_on }}</td>
             </tr>
             <tr>
@@ -32,7 +48,7 @@
             </tr>
         </table>
         <h3>Estat procés<i id="status-spinner" class="fa fa-spinner fa-spin" aria-hidden="true" style="display: none;"></i></h3>
-        <table>
+        <table class="status_table">
             <tr>
                 <th>Estatus execució: </th>
                 <td id="_td_status">???</td>
