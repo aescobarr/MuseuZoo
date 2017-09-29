@@ -22,6 +22,13 @@ $(document).ready(function() {
         "pageLength": 25,
         "pagingType": "full_numbers",
         "bLengthChange": false,
+        stateSave: true,
+        stateSaveCallback: function(settings,data) {
+            localStorage.setItem( 'DataTables_' + settings.sInstance, JSON.stringify(data) )
+        },
+        stateLoadCallback: function(settings) {
+            return JSON.parse( localStorage.getItem( 'DataTables_' + settings.sInstance ) )
+        },
         "columns": [
             { "data": "name" }
             ,{ "data": "tags" }

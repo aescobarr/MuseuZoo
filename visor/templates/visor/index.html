@@ -27,7 +27,8 @@
 <link href="{% static 'jquery-tagit/css/jquery.tagit.css' %}" rel="stylesheet">
 <style>
     #map { height: 600px; }
-    .result_window { padding: 20px; }
+    .result_window { padding: 0px 20px 5px 20px; }
+    //.result_window { padding: 20px; }
     .hidden-raster-id-value { display:none; }
     .hidden-datafile-id-value { display:none; }
     table.dataTable tr.odd { background-color: #E2E4FF; }
@@ -40,7 +41,7 @@
 <!--<div class="container result_window">-->
 <div class="result_window">
     <div class="row">
-        <div class="col-lg-4">
+        <div class="col-lg-3">
             <label for="autoc_favorits">Carrega favorits:</label>
             <input id="autoc_favorits">
             <span data-toggle="tooltip" title="Escriu tres lletres de la llista de favorits que vols carregar i tria-la del desplegable." class="fa fa-info-circle"></span>
@@ -48,7 +49,7 @@
     </div>
     <div class="row result_window">
         <div id="selected-rasters-control" style="visibility:hidden;" class="col-lg-3">
-            <span><strong>Rasters seleccionats:</strong></span>
+            <label>Rasters seleccionats:</label>
             <ul class="tagit ui-widget ui-widget-content ui-corner-all selected-rasters"></ul>
             <button data-toggle="tooltip" title="Desa llista de rasters" id="desa-llista" type="button"><span class="fa fa-heart" aria-hidden="true"></span></button>
         </div>
@@ -57,7 +58,7 @@
             <ul class="tagit ui-widget ui-widget-content ui-corner-all selected-datafiles">
             </ul>
             <div class="row">
-                <div class="col-lg-6"><button id="creua" type="button" class="btn btn-success">Creua raster(s) i fitxer de dades</button></div>
+                <div class="col-lg-6"><button id="creua" type="button" class="btn btn-success">Creua raster(s) i dades</button></div>
                 <div id="link_op" class="col-lg-6"></div>
             </div>
         </div>

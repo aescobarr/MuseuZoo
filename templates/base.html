@@ -26,6 +26,10 @@
         .btn {
             font-size: 12px;
         }
+
+        .navbar-fixed-top .nav {
+            padding: 0px !important;
+        }
     </style>
     <!-- Custom CSS -->
     <link href="{% static 'museuzoo/css/logo-nav.css' %}" rel="stylesheet">
@@ -118,7 +122,7 @@
     </script>
     <script>
         var opcions_llenguatge_catala = {
-            "sProcessing":   "Processant...",
+            "sProcessing":   '<span class="fa fa-spinner fa-spin" aria-hidden="true"></span>',
             "sLengthMenu":   "Mostra _MENU_ registres",
             "sZeroRecords":  "No s'han trobat registres.",
             "sInfo":         "Mostrant de _START_ a _END_ de _TOTAL_ registres",

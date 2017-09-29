@@ -54,7 +54,7 @@ $(document).ready(function() {
     };
 
     var create_op = function(operation){
-        $("#link_op").html('');
+        $("#link_op").html('<i id="status-spinner" class="fa fa-spinner fa-spin" aria-hidden="true"></i>');
         $.ajax({
             url: _operation_create_url,
             method: "POST",
