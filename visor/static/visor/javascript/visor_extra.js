@@ -161,8 +161,18 @@ $(document).ready(function() {
             if(geoJsonLayer){
                 map.removeLayer(geoJsonLayer);
             }
-            geoJsonLayer = L.geoJson().addTo(map);
-            geoJsonLayer.addData(json);
+            var bounds = null;
+            geoJsonLayer = L.geoJson(json,{
+                onEachFeature: function(feature,layer){
+                    var coord_list = [];
+                    for(var i = 0; i < feature.coordinates.length; i++){
+                        coord_list.push(new L.latLng(feature.coordinates[i][1],feature.coordinates[i][0]));
+                    }
+                    bounds = new L.latLngBounds(coord_list);
+                }
+            }).addTo(map);
+            //geoJsonLayer.addData(json);
+            map.fitBounds(bounds);
         }
     });
 

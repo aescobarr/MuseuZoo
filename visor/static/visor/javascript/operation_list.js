@@ -116,7 +116,7 @@ $(document).ready(function() {
             },
             {
                 "targets":5,
-                "title": "Status",
+                "title": "Estatus operació",
                 "render": function(data, type, row, meta){
                     if(data=='SUCCESS'){
                         data = '<i class="fa fa-check" style="color:#01DF01;" aria-hidden="true"></i>';

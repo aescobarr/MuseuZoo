@@ -91,7 +91,14 @@ $(document).ready(function() {
             },
             {
                 "targets":2,
-                "title": "Sistema referència"
+                "title": "Sistema referència",
+                "render": function(data, type, row, meta){
+                    console.log(data);
+                    if(data=='EPSG:4326'){
+                        return 'WGS84';
+                    }
+                    return data;
+                }
             },
             {
                 "targets":3,
