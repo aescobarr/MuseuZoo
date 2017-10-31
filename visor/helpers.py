@@ -5,12 +5,17 @@ from geoserver.catalog import Catalog, ConflictingDataError
 from django import forms
 import csv
 import sys
+import magic
 
 
 def check_file_already_uploaded(file, upload_dir):
     if os.path.isfile(upload_dir + "/" + file.name ):
         raise forms.ValidationError("Aquest fitxer ja es al disc")
 
+def check_file_is_tiff(file, upload_dir):
+    file_type = magic.from_file(upload_dir + "/" + file.name)
+    if 'TIFF' not in file_type:
+        raise forms.ValidationError("Aquest fitxer no sembla ser un ràster TIFF vàlid")
 
 def check_file_has_coords(csv_file):
     reader = csv.reader(csv_file, delimiter=';')

@@ -21,6 +21,7 @@ psycopg2==2.7.1
 pyparsing==2.2.0
 pyproj==1.9.5.1
 python-dateutil==2.6.0
+python-magic==0.4.13
 python-memcached==1.58
 pytz==2017.2
 requests==2.13.0

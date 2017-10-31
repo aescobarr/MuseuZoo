@@ -2,7 +2,7 @@ from django.forms import ModelForm
 from visor.models import WmsLayer, GeoServerRaster, DataFile, FILE_TYPES, RasterList
 from django import forms
 import museuzoo.settings as conf
-from visor.helpers import check_file_already_uploaded, check_file_has_coords, check_file_has_semicolon_separator
+from visor.helpers import check_file_already_uploaded, check_file_has_coords, check_file_has_semicolon_separator, check_file_is_tiff
 from file_resubmit.admin import AdminResubmitFileWidget
 
 
@@ -34,7 +34,7 @@ class GeoServerRasterForm(ModelForm):
     def clean(self):
         cleaned_data = super(GeoServerRasterForm, self).clean()
         check_file_already_uploaded(cleaned_data.get("file"), conf.LOCAL_RASTER_ROOT)
-        #process_file_geoserver(cleaned_data.get("file"))
+        check_file_is_tiff(cleaned_data.get("file"), conf.LOCAL_RASTER_ROOT)
         return cleaned_data
 
 
