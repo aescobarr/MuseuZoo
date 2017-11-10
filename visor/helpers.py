@@ -15,7 +15,7 @@ def check_file_already_uploaded(file, upload_dir):
 def check_file_is_tiff(file, upload_dir):
     file_type = magic.from_file(upload_dir + "/" + file.name)
     if 'TIFF' not in file_type:
-        raise forms.ValidationError("Aquest fitxer no sembla ser un ràster TIFF vàlid")
+        raise forms.ValidationError("Aquest fitxer no sembla ser un raster TIFF valid")
 
 def check_file_has_coords(csv_file):
     reader = csv.reader(csv_file, delimiter=';')
