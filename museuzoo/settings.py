@@ -181,8 +181,17 @@ LOGIN_REDIRECT_URL = '/'
 
 FORCE_LOWERCASE_TAGS = True
 
+#DEV
 #celery stuff
-djcelery.setup_loader()
-BROKER_URL = 'django://'
+#djcelery.setup_loader()
+#BROKER_URL = 'django://'
+
+#PRODUCTION
+# CELERY STUFF
+BROKER_URL = 'redis://localhost:6379'
+CELERY_RESULT_BACKEND = 'redis://localhost:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
 
 from settings_local import *
