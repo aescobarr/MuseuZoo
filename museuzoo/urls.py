@@ -3,8 +3,8 @@ from django.conf.urls import url,include
 from django.contrib import admin
 from visor import views
 from rest_framework import routers
-from fine_uploader.views import UploadView
-from fine_uploader.views import home
+#from fine_uploader.views import UploadView
+#from fine_uploader.views import home
 from visor.views import geotiff_create, geotiff_list, geotiff_update, datafile_list, datafile_create, datafile_update, operation_detail, operation_json_detail, operation_list, rasterlist_list, rasterlist_update, datatable_operation_list, datatable_datafile_list, datatable_geotiff_list, datatable_rasterlist_list
 from django.conf.urls.static import static
 from django.contrib.auth.views import login,logout
@@ -40,8 +40,8 @@ urlpatterns = [
     url(r'^datatableraster/list$', datatable_geotiff_list, name='datatable_geotiff_list'),
     url(r'^datatablerasterlist/list$', datatable_rasterlist_list, name='datatable_rasterlist_list'),
     url(r'^layer_list$', views.WmsLayerListView.as_view(), name='layer_list'),
-    url(r'^upload(?:/(?P<qquuid>\S+))?', UploadView.as_view(), name='upload'),
-    url(r'^upload_list$', UploadView.as_view(), name='upload'),
+    #url(r'^upload(?:/(?P<qquuid>\S+))?', UploadView.as_view(), name='upload'),
+    #url(r'^upload_list$', UploadView.as_view(), name='upload'),
     #url(r'^layer_edit/(?P<pk>\w+)$', views.WmsLayerUpdateView.as_view(), name='layer_edit'),
     #url(r'^wmslayerloader/$', views.layerloader, name='layerloader'),
     #url(r'^layerloader_json/$', views.layerloader_api, name='layerloader_json'),
