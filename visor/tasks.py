@@ -1,5 +1,5 @@
 from celery import task
-from celery import app
+from museuzoo.celery import app
 import museuzoo.settings as conf
 import os
 import errno
