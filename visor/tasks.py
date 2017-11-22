@@ -1,4 +1,5 @@
 from celery import task
+from celery import app
 import museuzoo.settings as conf
 import os
 import errno
@@ -18,7 +19,7 @@ def get_coverage_srs(name):
     return l.resource.projection
 
 
-@task
+@app.task
 def process_file_geoserver(file, geotiff_id):
     print "File name is:" + file.name
     #geoserver_filepath = conf.GEOSERVER_RASTER_DATA_DIR + "/" + os.path.basename(file.name)
@@ -41,7 +42,7 @@ def process_file_geoserver(file, geotiff_id):
     geotiff.save()
 
 
-@task
+@app.task
 def process_datafile(file, datafile_id):
     print "File is: " + file
     multi = MultiPoint(srid=4326)
@@ -64,7 +65,7 @@ def process_datafile(file, datafile_id):
     datafile.points_geo = multi
     datafile.save()
 
-@task(bind=True)
+@app.task(bind=True)
 def cross_files_and_save_result(self, operation_id):
     operation = Operation.objects.get(pk=operation_id)
     _task_id = self.request.id
