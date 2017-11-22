@@ -109,7 +109,7 @@ def geotiff_create(request):
             #raster = GDALRaster(conf.LOCAL_RASTER_ROOT + "/" + geotiff.file.name,write=True)
             #geotiff.raster = raster
             geotiff.save()
-            process_file_geoserver.delay(geotiff.file, geotiff.id)
+            process_file_geoserver.delay(geotiff.file.name, geotiff.id)
             return HttpResponseRedirect(reverse('geotiff_list'))
     else:
         form = GeoServerRasterForm()

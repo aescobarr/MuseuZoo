@@ -20,15 +20,15 @@ def get_coverage_srs(name):
 
 
 @app.task
-def process_file_geoserver(file, geotiff_id):
-    print "File name is:" + file.name
+def process_file_geoserver(file_name, geotiff_id):
+    print "File name is:" + file_name
     #geoserver_filepath = conf.GEOSERVER_RASTER_DATA_DIR + "/" + os.path.basename(file.name)
-    geoserver_filepath = conf.LOCAL_RASTER_ROOT + "/" + os.path.basename(file.name)
+    geoserver_filepath = conf.LOCAL_RASTER_ROOT + "/" + os.path.basename(file_name)
     print "File path is:" + geoserver_filepath
     cat = Catalog(conf.GEOSERVER_REST_URL, conf.GEOSERVER_USER, conf.GEOSERVER_PASSWORD)
     ws = cat.get_workspace(conf.GEOSERVER_WORKSPACE)
     tiffdata = geoserver_filepath
-    coverage_store_name = os.path.splitext(os.path.basename(file.name))[0]
+    coverage_store_name = os.path.splitext(os.path.basename(file_name))[0]
     print "Coverage store name is:" + coverage_store_name
     ft = cat.create_coveragestore(coverage_store_name, tiffdata, ws)
     #layer_name = os.path.splitext(file.name)[0]

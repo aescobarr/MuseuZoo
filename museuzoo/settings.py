@@ -25,7 +25,7 @@ SECRET_KEY = '2*ye+cg)_6!8itlrm$744r67^xjmoxfa7m81f-+1!qgno7pr)='
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['geomuseu.creaf.cat']
+ALLOWED_HOSTS = ['geomuseu.creaf.cat','127.0.0.1']
 
 
 # Application definition
