@@ -34,7 +34,7 @@ class GeoServerRasterForm(ModelForm):
     def clean(self):
         cleaned_data = super(GeoServerRasterForm, self).clean()
         check_file_already_uploaded(cleaned_data.get("file"), conf.LOCAL_RASTER_ROOT)
-        check_file_is_tiff(cleaned_data.get("file"), conf.LOCAL_RASTER_ROOT)
+        #check_file_is_tiff(cleaned_data.get("file"), conf.LOCAL_RASTER_ROOT)
         return cleaned_data
 
 
