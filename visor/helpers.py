@@ -55,7 +55,7 @@ def delete_geoserver_store(filename):
     name_and_extension = os.path.basename(filename)
     name = os.path.splitext(name_and_extension)[0]
     # Load catalog
-    cat = Catalog(conf.GEOSERVER_REST_URL, conf.GEOSERVER_USER, conf.GEOSERVER_PASSWORD)
+    cat = Catalog(conf.GEOSERVER_REST_INTERNAL_URL, conf.GEOSERVER_USER, conf.GEOSERVER_PASSWORD)
     # Load store
     st = cat.get_store(name)
     # Load layer
