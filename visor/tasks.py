@@ -16,7 +16,10 @@ def get_coverage_srs(name):
     print "Recovering layer with name - " + name
     cat = Catalog(conf.GEOSERVER_REST_URL, conf.GEOSERVER_USER, conf.GEOSERVER_PASSWORD)
     l = cat.get_layer(name)
-    return l.resource.projection
+    if l is None:
+        return None
+    else:
+        return l.resource.projection
 
 
 @app.task
@@ -34,7 +37,8 @@ def process_file_geoserver(file_name, geotiff_id):
     #layer_name = os.path.splitext(file.name)[0]
     geotiff = GeoServerRaster.objects.get(pk=geotiff_id)
     srs = get_coverage_srs(coverage_store_name)
-    geotiff.srs_code = srs
+    if srs is not None:
+        geotiff.srs_code = srs
     raster = GDALRaster(geoserver_filepath, write=True)
     geotiff.raster = raster
     #geotiff.geoserver_layername = coverage_store_name
@@ -111,6 +115,8 @@ def cross_files_and_save_result(self, operation_id):
         with open( conf.LOCAL_RESULTS_ROOT + "/" + str(operation_id) + ".csv", "wb") as f:
             writer = csv.writer(f, delimiter=';')
             writer.writerow(["raster_name", "value", "coord_x", "coord_y"])
-            writer.writerows(result)
+            for row in result:
+                writer.writerow([unicode(s).encode("utf-8") for s in row])
+                #writer.writerows(result)
     operation.result_path = conf.LOCAL_RESULTS_ROOT_DIRECTORY + "/" + str(operation_id) + ".csv"
     operation.save()
