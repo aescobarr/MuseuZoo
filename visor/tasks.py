@@ -81,7 +81,7 @@ def cross_files_and_save_result(self, operation_id):
     for raster in rasters:
         rs_ids.append(str(raster.id))
     rs_id_list = ",".join(rs_ids)
-    query = """ select r.name as raster_name, st_value(r.raster,subquery.location), subquery.coord_x, subquery.coord_y
+    query = """ select distinct r.name as raster_name, st_value(r.raster,subquery.location), subquery.coord_x, subquery.coord_y
                 from
                 visor_geoserverraster r,
                 (
